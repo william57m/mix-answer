@@ -1,0 +1,30 @@
+---
+version: '2'
+
+services:
+    mix-answer-server:
+        build: 
+            context: .
+            dockerfile: docker/Dockerfile-server
+        container_name: mix-answer-server
+        network_mode: bridge
+        volumes:
+            - ./server:/home/server
+        ports:
+            - "5000:5000"
+        links:
+            - mix-answer-postgres:db
+
+    mix-answer-postgres:
+        image: postgres:9.4
+        container_name: mix-answer-postgres
+        network_mode: bridge
+        volumes:
+            - mix-answer-data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_USER=mixuser
+            - POSTGRES_PASSWORD=mixuser
+            - POSTGRES_DB=mixanswer
+
+volumes:
+    mix-answer-data:

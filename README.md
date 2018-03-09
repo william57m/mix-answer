@@ -14,7 +14,7 @@ docker-compose build
 docker-compose up -d
 
 # Init database
-docker-compose run -d --no-deps mix-answer-server python scripts/init_db.py --config config/dev.conf --data_test true
+docker-compose run --rm --no-deps mix-answer-server python scripts/init_db.py --config config/dev.conf --data_test true
 ```
 
 

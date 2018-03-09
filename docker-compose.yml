@@ -4,8 +4,8 @@ version: '2'
 services:
     mix-answer-server:
         build: 
-            context: .
-            dockerfile: docker/Dockerfile-server
+            context: server
+            dockerfile: Dockerfile
         container_name: mix-answer-server
         network_mode: bridge
         volumes:

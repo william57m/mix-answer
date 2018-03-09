@@ -5,7 +5,7 @@ ENV HOME /home/server
 WORKDIR $HOME
 
 # Copy files for installation
-COPY ./server/requirements.txt $HOME
+COPY ./ $HOME
 
 # Install dependencies
 USER root

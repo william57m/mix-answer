@@ -1,13 +1,25 @@
-import tornado.web
+import argparse
+import sys
+
+from sqlalchemy import engine_from_config
+from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import sessionmaker
+
+from tornado.ioloop import IOLoop
+from tornado.web import Application
 
 # Handlers
 import core.api.answers as answers_handler
 import core.api.questions as questions_handler
 import core.api.tags as tags_handler
+import core.api.users as users_handler
 import core.api.votes as votes_handler
 
+# Utils
+from core.utils.config import parse_config
 
-class WebApplication(tornado.web.Application):
+
+class WebApplication(Application):
 
     def register_routes(self):
         return [
@@ -17,20 +29,42 @@ class WebApplication(tornado.web.Application):
             (r'/questions/(?P<question_id>[0-9]+)', questions_handler.QuestionByIdHandler),
             (r'/tags/?', tags_handler.TagHandler),
             (r'/tags/(?P<tag_id>[0-9]+)', tags_handler.TagByIdHandler),
+            (r'/users/?', users_handler.UserHandler),
+            (r'/users/(?P<vote_id>[0-9]+)', users_handler.UserByIdHandler),
             (r'/votes/?', votes_handler.VoteHandler),
-            (r'/votes/(?P<tag_id>[0-9]+)', votes_handler.VoteByIdHandler),
+            (r'/votes/(?P<vote_id>[0-9]+)', votes_handler.VoteByIdHandler)
         ]
 
-    def __init__(self):
+    def __init__(self, config):
+
+        # Database
+        self.db = scoped_session(sessionmaker(bind=engine_from_config({
+            'sqlalchemy.url': config.get('sqlalchemy', 'url'),
+            'sqlalchemy.echo': config.getboolean('sqlalchemy', 'echo')
+        }), autoflush=True))
 
         # Register routes
         handlers = self.register_routes()
-        
+
         # Init Tornado Application
-        tornado.web.Application.__init__(self, handlers)
+        settings = {
+            'debug': True if config.getint('tornado', 'debug') == 1 else False,
+            'autoreload': True if config.getint('tornado', 'autoreload') == 1 else False
+        }
+        Application.__init__(self, handlers, **settings)
 
 
 if __name__ == "__main__":
-    app = WebApplication()
+
+    # Config
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', dest='config', required=True)
+    args = parser.parse_args()
+    if not args.config:
+        parser.print_help()
+        sys.exit(1)
+    config = parse_config(args.config)
+
+    app = WebApplication(config)
     app.listen(5000)
-    tornado.ioloop.IOLoop.current().start()
+    IOLoop.current().start()

@@ -14,5 +14,8 @@ RUN pip install \
         --disable-pip-version-check \
         -r requirements.txt
 
+# Setup
+RUN python setup.py develop
+
 # Run server
 CMD ["python", "webserver.py", "--config", "config/dev.conf"]

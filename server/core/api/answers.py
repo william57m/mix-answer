@@ -1,7 +1,7 @@
-from tornado.web import RequestHandler
+from core.api import BaseRequestHandler
 
 
-class AnswerHandler(RequestHandler):
+class AnswerHandler(BaseRequestHandler):
 
     async def get(self):
         self.write("AnswerHandler: GET")
@@ -10,7 +10,7 @@ class AnswerHandler(RequestHandler):
         self.write("AnswerHandler: POST")
 
 
-class AnswerByIdHandler(RequestHandler):
+class AnswerByIdHandler(BaseRequestHandler):
 
     async def get(self, answer_id):
         self.write("AnswerByIdHandler: GET")

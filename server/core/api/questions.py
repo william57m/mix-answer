@@ -1,15 +1,18 @@
-from sqlalchemy.exc import SQLAlchemyError
-from tornado.web import RequestHandler
+import json
 
+from sqlalchemy.exc import SQLAlchemyError
+
+from core.api import BaseRequestHandler
 from core.db.models import Question
 from core.utils.exceptions import InternalServerError
 from core.utils.query import check_param
 from core.utils.query import extract_metadata
 from core.utils.query import limit_offset_query
 from core.utils.query import order_query
+from core.utils.query import update_by_property_list
 
 
-class QuestionHandler(RequestHandler):
+class QuestionHandler(BaseRequestHandler):
 
     async def get(self):
 
@@ -33,18 +36,23 @@ class QuestionHandler(RequestHandler):
 
     async def post(self):
 
+        # Get user from cookie
+        from core.db.models import User
+        current_user = User(firstname='1', lastname='2', email='3')
+        self.application.db.add(current_user)
+
         # Create data
-        data = self.request_body
+        data = json.loads(self.request.body.decode('utf-8'))
         title = check_param(data, name='title', type='string', required=True)
         body = check_param(data, name='body', type='string', required=True)
-        question = Question(title=title, body=body)
+        question = Question(title=title, body=body, user=current_user)
 
         # Commit in DB
         try:
-            self.db.add(question)
-            self.db.commit()
+            self.application.db.add(question)
+            self.application.db.commit()
         except SQLAlchemyError as error:
-            self.db.rollback()
+            self.application.db.rollback()
             raise InternalServerError('Unable to create the question.', error)
 
         # Returns response
@@ -53,13 +61,43 @@ class QuestionHandler(RequestHandler):
         self.finish()
 
 
-class QuestionByIdHandler(RequestHandler):
+class QuestionByIdHandler(BaseRequestHandler):
 
-    async def get(self, answer_id):
-        self.write("QuestionByIdHandler: GET")
+    def prepare(self):
+        super().prepare()
+        if self.request.method != 'OPTIONS':
+            question_id = self.path_kwargs['question_id']
+            self.question = self.get_object_by_id(Question, question_id)
 
-    async def put(self, answer_id):
-        self.write("QuestionByIdHandler: PUT")
+    async def put(self, question_id):
+        data = json.loads(self.request.body.decode('utf-8'))
 
-    async def delete(self, answer_id):
-        self.write("QuestionByIdHandler: DELETE")
+        # Update basic properties
+        properties = [
+            'title', 'body'
+        ]
+        update_by_property_list(properties, data, self.question)
+
+        # Commit in DB
+        try:
+            self.application.db.commit()
+        except SQLAlchemyError as error:
+            self.application.db.rollback()
+            raise InternalServerError('Unable to update the alert.', error)
+
+        # Returns response
+        self.set_status(200)
+        self.write({'data': self.question.to_dict()})
+        self.finish()
+
+    async def delete(self, question_id):
+        try:
+            self.application.db.delete(self.question)
+            self.application.db.commit()
+        except SQLAlchemyError as ex:
+            self.application.db.rollback()
+            error_message = "Unable to delete question %s." % (question_id)
+            raise InternalServerError(error_message, ex)
+
+        self.set_status(204)
+        self.finish()

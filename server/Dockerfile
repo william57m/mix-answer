@@ -1,21 +1,23 @@
-FROM python:3.6.4
+FROM        python:3.6.4
 
 # Home directory
-ENV HOME /home/server
-WORKDIR $HOME
+ENV HOME    /home/server
+WORKDIR     $HOME
 
 # Copy files for installation
-COPY ./ $HOME
+COPY        ./requirements.txt      $HOME/requirements.txt
 
 # Install dependencies
-USER root
-RUN pip install \
-        --no-cache-dir \
-        --disable-pip-version-check \
-        -r requirements.txt
+USER        root
+RUN         pip install \
+                --no-cache-dir \
+                --disable-pip-version-check \
+                -r requirements.txt
+
+COPY        ./                      $HOME
 
 # Setup
-RUN python setup.py develop
+RUN         python setup.py develop
 
 # Run server
-CMD ["python", "webserver.py", "--config", "config/dev.conf"]
+CMD         ["python", "core/webserver.py", "--config", "config/dev.conf"]

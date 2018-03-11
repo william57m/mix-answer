@@ -19,7 +19,7 @@ import core.api.votes as votes_handler
 from core.utils.config import parse_config
 
 
-class WebApplication(Application):
+class WebServer(Application):
 
     def register_routes(self):
         return [
@@ -65,6 +65,6 @@ if __name__ == "__main__":
         sys.exit(1)
     config = parse_config(args.config)
 
-    app = WebApplication(config)
+    app = WebServer(config)
     app.listen(5000)
     IOLoop.current().start()

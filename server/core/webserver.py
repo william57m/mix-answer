@@ -23,10 +23,13 @@ class WebServer(Application):
 
     def register_routes(self):
         return [
-            (r'/answers/?', answers_handler.AnswerHandler),
-            (r'/answers/(?P<answer_id>[0-9]+)', answers_handler.AnswerByIdHandler),
+            # Questions
             (r'/questions/?', questions_handler.QuestionHandler),
             (r'/questions/(?P<question_id>[0-9]+)', questions_handler.QuestionByIdHandler),
+            # Answers
+            (r'/questions/(?P<question_id>[0-9]+)/answers/?', answers_handler.AnswerHandler),
+            (r'/answers/(?P<answer_id>[0-9]+)', answers_handler.AnswerByIdHandler),
+            # Tags
             (r'/tags/?', tags_handler.TagHandler),
             (r'/tags/(?P<tag_id>[0-9]+)', tags_handler.TagByIdHandler),
             (r'/users/?', users_handler.UserHandler),

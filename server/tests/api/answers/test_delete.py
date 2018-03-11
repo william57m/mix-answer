@@ -1,9 +1,10 @@
+from core.db.models import Answer
 from core.db.models import Question
 from core.db.models import User
 
 from tests.base import BaseAppTestCase
 
-URI = '/questions/{id}'
+URI = '/answers/{id}'
 
 
 class TestWithInvalidParams(BaseAppTestCase):
@@ -16,21 +17,23 @@ class TestWithInvalidParams(BaseAppTestCase):
 
         # Check response
         self.assertEqual(404, response.code)
-        self.assertEqual('No Question with id 0', body['error']['message'])
+        self.assertEqual('No Answer with id 0', body['error']['message'])
 
 
 class TestWithValidParams(BaseAppTestCase):
 
     def setUp(self):
-
         super().setUp()
-        u = User(firstname='Fernando', lastname='Alonso', email='fernando.alonso@mclaren.com')
-        self.question = Question(title='Title', body='Body', user=u)
-        self.db.add(u)
-        self.db.add(self.question)
+        u1 = User(firstname="Fernando", lastname="Alonso", email="fernando.alonso@mclaren.com")
+        q1 = Question(title="What is the fatest car?", body="Which team should I chose to win the F1 world championship?", user=u1)
+        self.answer = Answer(message="Message 1", question=q1)
+        self.db.add(u1)
+        self.db.add(q1)
+        self.db.add(self.answer)
         self.db.commit()
 
     def tearDown(self):
+        self.db.query(Answer).delete()
         self.db.query(Question).delete()
         self.db.query(User).delete()
         self.db.commit()
@@ -39,11 +42,11 @@ class TestWithValidParams(BaseAppTestCase):
     def test_delete(self):
 
         # Call
-        response = self.fetch(URI.format(id=self.question.id), method='DELETE')
+        response = self.fetch(URI.format(id=self.answer.id), method='DELETE')
 
         # Check status code
         self.assertEqual(204, response.code)
 
         # Check in DB
-        alert = self.db.query(Question).get(self.question.id)
+        alert = self.db.query(Question).get(self.answer.id)
         self.assertEqual(None, alert)

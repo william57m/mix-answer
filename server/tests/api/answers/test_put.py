@@ -1,17 +1,17 @@
 import json
 
+from core.db.models import Answer
 from core.db.models import Question
 from core.db.models import User
 
 from tests.base import BaseAppTestCase
 
-URI = '/questions/{id}'
+URI = '/answers/{id}'
 
 
 def get_valid_data():
     return {
-        'title': 'Title',
-        'body': 'Body'
+        'message': 'New Message'
     }
 
 
@@ -25,7 +25,7 @@ class TestWithInvalidParams(BaseAppTestCase):
 
         # Check response
         self.assertEqual(404, response.code)
-        self.assertEqual('No Question with id 0', body["error"]['message'])
+        self.assertEqual('No Answer with id 0', body["error"]['message'])
 
 
 class TestWithValidParams(BaseAppTestCase):
@@ -33,12 +33,15 @@ class TestWithValidParams(BaseAppTestCase):
     def setUp(self):
         super().setUp()
         u1 = User(firstname="Fernando", lastname="Alonso", email="fernando.alonso@mclaren.com")
-        self.q1 = Question(title="What is the fatest car?", body="Which team should I chose to win the F1 world championship?", user=u1)
+        q1 = Question(title="What is the fatest car?", body="Which team should I chose to win the F1 world championship?", user=u1)
+        self.answer = Answer(message="Message 1", question=q1)
         self.db.add(u1)
-        self.db.add(self.q1)
+        self.db.add(q1)
+        self.db.add(self.answer)
         self.db.commit()
 
     def tearDown(self):
+        self.db.query(Answer).delete()
         self.db.query(Question).delete()
         self.db.query(User).delete()
         self.db.commit()
@@ -50,7 +53,7 @@ class TestWithValidParams(BaseAppTestCase):
         data = get_valid_data()
 
         # Call
-        response = self.fetch(URI.format(id=self.q1.id), method='PUT', body=json.dumps(data))
+        response = self.fetch(URI.format(id=self.answer.id), method='PUT', body=json.dumps(data))
         body = self.response_dict(response)
 
         # Check status code
@@ -58,7 +61,5 @@ class TestWithValidParams(BaseAppTestCase):
 
         # Check returned data
         returned_data = body['data']
-        self.assertIn('title', returned_data)
-        self.assertEqual(data['title'], returned_data['title'])
-        self.assertIn('body', returned_data)
-        self.assertEqual(data['body'], returned_data['body'])
+        self.assertIn('message', returned_data)
+        self.assertEqual(data['message'], returned_data['message'])

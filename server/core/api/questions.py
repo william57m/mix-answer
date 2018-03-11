@@ -70,20 +70,17 @@ class QuestionByIdHandler(BaseRequestHandler):
             self.question = self.get_object_by_id(Question, question_id)
 
     async def put(self, question_id):
-        data = json.loads(self.request.body.decode('utf-8'))
 
         # Update basic properties
-        properties = [
-            'title', 'body'
-        ]
-        update_by_property_list(properties, data, self.question)
+        data = json.loads(self.request.body.decode('utf-8'))
+        update_by_property_list(['title', 'body'], data, self.question)
 
         # Commit in DB
         try:
             self.application.db.commit()
         except SQLAlchemyError as error:
             self.application.db.rollback()
-            raise InternalServerError('Unable to update the alert.', error)
+            raise InternalServerError('Unable to update the question.', error)
 
         # Returns response
         self.set_status(200)
@@ -94,10 +91,9 @@ class QuestionByIdHandler(BaseRequestHandler):
         try:
             self.application.db.delete(self.question)
             self.application.db.commit()
-        except SQLAlchemyError as ex:
+        except SQLAlchemyError as error:
             self.application.db.rollback()
-            error_message = "Unable to delete question %s." % (question_id)
-            raise InternalServerError(error_message, ex)
+            raise InternalServerError('Unable to delete the question.', error)
 
         self.set_status(204)
         self.finish()

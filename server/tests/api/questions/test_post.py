@@ -15,8 +15,7 @@ def get_valid_data():
     }
 
 
-class TestMissingParamsCompany(BaseAppTestCase):
-    """ Test create with missing parameters """
+class TestWithMissingParams(BaseAppTestCase):
 
     def tearDown(self):
         """ Teardown test """
@@ -41,7 +40,6 @@ class TestMissingParamsCompany(BaseAppTestCase):
         self.assertEqual('Param title is missing', body["error"]['message'])
 
     def test_missing_body(self):
-        """ Test create with missing body """
 
         # Prepare data
         data = get_valid_data()
@@ -56,23 +54,17 @@ class TestMissingParamsCompany(BaseAppTestCase):
         self.assertEqual('Param body is missing', body["error"]['message'])
 
 
-class TestCreateQuestion(BaseAppTestCase):
-    """ Test create with valid parameters """
+class TestWithValidParams(BaseAppTestCase):
 
     def setUp(self):
-        """ Setup test """
-
         super().setUp()
 
     def tearDown(self):
-        """ Teardown test """
-
         self.db.query(Question).delete()
         self.db.commit()
         super().tearDown()
 
     def test_valid_data(self):
-        """ Test create with valid data """
 
         # Prepare data
         data = get_valid_data()

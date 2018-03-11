@@ -1,5 +1,3 @@
-import json
-
 from core.db.models import Question
 from core.db.models import User
 
@@ -8,7 +6,7 @@ from tests.base import BaseAppTestCase
 URI = '/questions'
 
 
-class TestListQuestion(BaseAppTestCase):
+class TestWithValidParams(BaseAppTestCase):
 
     def setUp(self):
         super().setUp()
@@ -27,7 +25,6 @@ class TestListQuestion(BaseAppTestCase):
         super().tearDown()
 
     def test_list(self):
-        """ Test get all companies """
 
         # Call
         response = self.fetch(URI, method='GET')

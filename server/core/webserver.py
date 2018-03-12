@@ -29,13 +29,13 @@ class WebServer(Application):
             # Answers
             (r'/questions/(?P<question_id>[0-9]+)/answers/?', answers_handler.AnswerHandler),
             (r'/answers/(?P<answer_id>[0-9]+)', answers_handler.AnswerByIdHandler),
+            # Votes
+            (r'/answers/(?P<answer_id>[0-9]+)/votes/?', votes_handler.VoteHandler),
             # Tags
             (r'/tags/?', tags_handler.TagHandler),
             (r'/tags/(?P<tag_id>[0-9]+)', tags_handler.TagByIdHandler),
             (r'/users/?', users_handler.UserHandler),
-            (r'/users/(?P<vote_id>[0-9]+)', users_handler.UserByIdHandler),
-            (r'/votes/?', votes_handler.VoteHandler),
-            (r'/votes/(?P<vote_id>[0-9]+)', votes_handler.VoteByIdHandler)
+            (r'/users/(?P<vote_id>[0-9]+)', users_handler.UserByIdHandler)
         ]
 
     def __init__(self, config):

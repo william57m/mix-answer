@@ -19,8 +19,11 @@ class TestWithInvalidParams(BaseAppTestCase):
 
     def test_with_invalid_id(self):
 
+        # Prepare data
+        data = get_valid_data()
+
         # Call
-        response = self.fetch(URI.format(id=0), method='DELETE')
+        response = self.fetch(URI.format(id=0), method='POST', body=json.dumps(data))
         body = self.response_dict(response)
 
         # Check response

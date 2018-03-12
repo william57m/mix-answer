@@ -11,7 +11,7 @@ Mix Answer uses modern tools
 * [Python 3.6](http://www.python.org/) #server
 * [PostgreSQL](http://www.postgresql.org/) #database
 * [Tornado](http://www.tornadoweb.org/en/stable/) #server
-* [ReactJS](https://reactjs.org//) #frontend
+* [ReactJS](https://reactjs.org/) #frontend
 
 
 ## Development
@@ -59,11 +59,17 @@ docker run --rm -it \
            pytest -v
 ```
 
+
 ## Deployment
 TO WRITE
 
 
+## Future Features
+- Add ability to validate a response
+- Badge for users (to distinguish reliable users)
+
+
 ## Contribution
-1. Please use flake8 as syntax linter
-2. Please write tests
-3. Please open a pull request for review
+- Please use flake8 as syntax linter
+- Please write tests
+- Please open a pull request for review

@@ -1,4 +1,6 @@
 import argparse
+import logging
+import logging.config
 import sys
 
 from sqlalchemy import engine_from_config
@@ -11,6 +13,7 @@ from tornado.web import Application
 # Handlers
 import core.api.answers as answers_handler
 import core.api.questions as questions_handler
+import core.api.login as login_handler
 import core.api.tags as tags_handler
 import core.api.users as users_handler
 import core.api.votes as votes_handler
@@ -34,11 +37,16 @@ class WebServer(Application):
             # Tags
             (r'/tags/?', tags_handler.TagHandler),
             (r'/tags/(?P<tag_id>[0-9]+)', tags_handler.TagByIdHandler),
+            # Users
+            (r'/login/?', login_handler.LoginHandler),
             (r'/users/?', users_handler.UserHandler),
             (r'/users/(?P<vote_id>[0-9]+)', users_handler.UserByIdHandler)
         ]
 
     def __init__(self, config):
+
+        # Config
+        self.config = config
 
         # Database
         self.db = scoped_session(sessionmaker(bind=engine_from_config({
@@ -59,15 +67,21 @@ class WebServer(Application):
 
 if __name__ == "__main__":
 
-    # Config
+    # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', dest='config', required=True)
     args = parser.parse_args()
     if not args.config:
         parser.print_help()
         sys.exit(1)
+
+    # Get config
     config = parse_config(args.config)
 
+    # Set logging config
+    logging.config.fileConfig(config, disable_existing_loggers=0)
+
+    # Launch webserver
     app = WebServer(config)
     app.listen(5000)
     IOLoop.current().start()

@@ -3,10 +3,10 @@ from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import String
 
-from core.db.models import Base
+from core.db.models import LogEntity
 
 
-class User(Base):
+class User(LogEntity):
 
     __tablename__ = 'users'
 
@@ -19,11 +19,12 @@ class User(Base):
 
 
     def to_dict(self):
-
-        return {
+        my_dict = LogEntity.to_dict(self)
+        my_dict.update({
             'id': self.id,
             'firstname': self.firstname,
             'lastname': self.lastname,
             'email': self.email,
             'is_admin': self.is_admin
-        }
+        })
+        return my_dict

@@ -48,5 +48,5 @@ class TestWithValidParams(BaseAppTestCase):
         self.assertEqual(204, response.code)
 
         # Check in DB
-        alert = self.db.query(Question).get(self.answer.id)
+        alert = self.db.query(Answer).get(self.answer.id)
         self.assertEqual(None, alert)

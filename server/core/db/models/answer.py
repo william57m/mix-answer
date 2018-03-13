@@ -5,10 +5,10 @@ from sqlalchemy import String
 
 from sqlalchemy.orm import relationship
 
-from core.db.models import Base
+from core.db.models import LogEntity
 
 
-class Answer(Base):
+class Answer(LogEntity):
 
     __tablename__ = 'answers'
 
@@ -18,9 +18,10 @@ class Answer(Base):
     question = relationship('Question')
 
     def to_dict(self):
-
-        return {
+        my_dict = LogEntity.to_dict(self)
+        my_dict.update({
             'id': self.id,
             'message': self.message,
             'question_id': self.question_id
-        }
+        })
+        return my_dict

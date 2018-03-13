@@ -9,6 +9,8 @@ from sqlalchemy.sql import sqltypes
 from urllib.parse import parse_qsl
 from urllib.parse import unquote
 
+from core.utils.exceptions import BadRequestError
+
 
 def order_query(request, query):
     """ Order query by fields
@@ -29,7 +31,7 @@ def order_query(request, query):
 
             # Check sign
             if sign not in ['+', '-']:
-                raise Exception('Invalid sign sort.')
+                raise BadRequestError('Invalid sign sort.')
 
             # Check field
             if hasattr(query.column_descriptions[0]['entity'], field):
@@ -141,7 +143,7 @@ def filter_query(request, query, model_class, authorized_fields=None, metadata=N
 def check_param(data, name, type, required):
     if name not in data:
         if required:
-            raise(f'Param {name} is missing')
+            raise BadRequestError(f'Param {name} is missing')
         else:
             return None
 

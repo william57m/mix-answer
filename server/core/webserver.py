@@ -1,4 +1,6 @@
 import argparse
+import logging
+import logging.config
 import sys
 
 from sqlalchemy import engine_from_config
@@ -11,6 +13,7 @@ from tornado.web import Application
 # Handlers
 import core.api.answers as answers_handler
 import core.api.questions as questions_handler
+import core.api.login as login_handler
 import core.api.tags as tags_handler
 import core.api.users as users_handler
 import core.api.votes as votes_handler
@@ -19,23 +22,31 @@ import core.api.votes as votes_handler
 from core.utils.config import parse_config
 
 
-class WebApplication(Application):
+class WebServer(Application):
 
     def register_routes(self):
         return [
-            (r'/answers/?', answers_handler.AnswerHandler),
-            (r'/answers/(?P<answer_id>[0-9]+)', answers_handler.AnswerByIdHandler),
+            # Questions
             (r'/questions/?', questions_handler.QuestionHandler),
             (r'/questions/(?P<question_id>[0-9]+)', questions_handler.QuestionByIdHandler),
+            # Answers
+            (r'/questions/(?P<question_id>[0-9]+)/answers/?', answers_handler.AnswerHandler),
+            (r'/answers/(?P<answer_id>[0-9]+)', answers_handler.AnswerByIdHandler),
+            # Votes
+            (r'/answers/(?P<answer_id>[0-9]+)/votes/?', votes_handler.VoteHandler),
+            # Tags
             (r'/tags/?', tags_handler.TagHandler),
             (r'/tags/(?P<tag_id>[0-9]+)', tags_handler.TagByIdHandler),
+            # Users
+            (r'/login/?', login_handler.LoginHandler),
             (r'/users/?', users_handler.UserHandler),
-            (r'/users/(?P<vote_id>[0-9]+)', users_handler.UserByIdHandler),
-            (r'/votes/?', votes_handler.VoteHandler),
-            (r'/votes/(?P<vote_id>[0-9]+)', votes_handler.VoteByIdHandler)
+            (r'/users/(?P<vote_id>[0-9]+)', users_handler.UserByIdHandler)
         ]
 
     def __init__(self, config):
+
+        # Config
+        self.config = config
 
         # Database
         self.db = scoped_session(sessionmaker(bind=engine_from_config({
@@ -56,15 +67,21 @@ class WebApplication(Application):
 
 if __name__ == "__main__":
 
-    # Config
+    # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', dest='config', required=True)
     args = parser.parse_args()
     if not args.config:
         parser.print_help()
         sys.exit(1)
+
+    # Get config
     config = parse_config(args.config)
 
-    app = WebApplication(config)
+    # Set logging config
+    logging.config.fileConfig(config, disable_existing_loggers=0)
+
+    # Launch webserver
+    app = WebServer(config)
     app.listen(5000)
     IOLoop.current().start()

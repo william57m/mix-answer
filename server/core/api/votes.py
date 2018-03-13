@@ -1,22 +1,42 @@
-from tornado.web import RequestHandler
+from sqlalchemy.exc import SQLAlchemyError
+
+from core.api import BaseRequestHandler
+from core.db.models import Answer
+from core.db.models import Vote
+from core.utils.exceptions import InternalServerError
 
 
-class VoteHandler(RequestHandler):
+class VoteHandler(BaseRequestHandler):
 
-    async def get(self):
-        self.write("VoteHandler: GET")
+    def prepare(self):
+        super().prepare()
+        if self.request.method != 'OPTIONS':
+            answer_id = self.path_kwargs['answer_id']
+            self.answer = self.get_object_by_id(Answer, answer_id)
 
-    async def post(self):
-        self.write("VoteHandler: POST")
+    async def post(self, answer_id):
 
+        # Get user id
+        # TODO: take the real user id when the authentication system is ready
+        user_id = 1
 
-class VoteByIdHandler(RequestHandler):
+        # Check vote
+        vote = self.application.db.query(Vote).filter(Vote.answer_id == answer_id) \
+                                              .filter(Vote.user_id == user_id) \
+                                              .first()
 
-    async def get(self, answer_id):
-        self.write("VoteByIdHandler: GET")
+        # Commit in DB
+        try:
+            if vote:
+                self.application.db.delete(vote)
+            else:
+                vote = Vote(user_id=user_id, answer_id=answer_id)
+                self.application.db.add(vote)
+            self.application.db.commit()
+        except SQLAlchemyError as error:
+            self.application.db.rollback()
+            raise InternalServerError('Unable to toggle the vote.', error)
 
-    async def put(self, answer_id):
-        self.write("VoteByIdHandler: PUT")
-
-    async def delete(self, answer_id):
-        self.write("VoteByIdHandler: DELETE")
+        # Returns response
+        self.set_status(201)
+        self.finish()

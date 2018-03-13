@@ -5,9 +5,6 @@ from setuptools import setup
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION_FILE = 'version.properties'
-VERSION_PROP = 'GIT_REVISION'
-
 requires = None
 
 with open(os.path.join(here, 'requirements.txt')) as f:

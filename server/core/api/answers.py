@@ -1,22 +1,100 @@
-from tornado.web import RequestHandler
+import json
+
+from sqlalchemy.exc import SQLAlchemyError
+
+from core.api import BaseRequestHandler
+from core.db.models import Answer
+from core.db.models import Question
+from core.utils.exceptions import InternalServerError
+from core.utils.query import check_param
+from core.utils.query import extract_metadata
+from core.utils.query import limit_offset_query
+from core.utils.query import order_query
+from core.utils.query import update_by_property_list
 
 
-class AnswerHandler(RequestHandler):
+class AnswerHandler(BaseRequestHandler):
 
-    async def get(self):
-        self.write("AnswerHandler: GET")
+    def prepare(self):
+        super().prepare()
+        if self.request.method != 'OPTIONS':
+            question_id = self.path_kwargs['question_id']
+            self.question = self.get_object_by_id(Question, question_id)
 
-    async def post(self):
-        self.write("AnswerHandler: POST")
+    async def get(self, question_id):
+
+        # Prepare query
+        query = self.application.db.query(Answer).filter(Answer.question_id == question_id)
+        metadata = extract_metadata(query)
+        query = order_query(self, query)
+        query = limit_offset_query(self, query, metadata)
+        answers = query.all()
+
+        # Prepare data to return
+        ret = {
+            'data': [answer.to_dict() for answer in answers],
+            'metadata': metadata
+        }
+
+        # Returns response
+        self.set_status(200)
+        self.write(ret)
+        self.finish()
+
+    async def post(self, question_id):
+
+        # Create data
+        data = json.loads(self.request.body.decode('utf-8'))
+        message = check_param(data, name='message', type='string', required=True)
+        answer = Answer(message=message, question_id=question_id)
+
+        # Commit in DB
+        try:
+            self.application.db.add(answer)
+            self.application.db.commit()
+        except SQLAlchemyError as error:
+            self.application.db.rollback()
+            raise InternalServerError('Unable to create the answer.', error)
+
+        # Returns response
+        self.set_status(201)
+        self.write({'data': answer.to_dict()})
+        self.finish()
 
 
-class AnswerByIdHandler(RequestHandler):
+class AnswerByIdHandler(BaseRequestHandler):
 
-    async def get(self, answer_id):
-        self.write("AnswerByIdHandler: GET")
+    def prepare(self):
+        super().prepare()
+        if self.request.method != 'OPTIONS':
+            answer_id = self.path_kwargs['answer_id']
+            self.answer = self.get_object_by_id(Answer, answer_id)
 
     async def put(self, answer_id):
-        self.write("AnswerByIdHandler: PUT")
+
+        # Update basic properties
+        data = json.loads(self.request.body.decode('utf-8'))
+        update_by_property_list(['message'], data, self.answer)
+
+        # Commit in DB
+        try:
+            self.application.db.commit()
+        except SQLAlchemyError as error:
+            self.application.db.rollback()
+            raise InternalServerError('Unable to update the answer.', error)
+
+        # Returns response
+        self.set_status(200)
+        self.write({'data': self.answer.to_dict()})
+        self.finish()
 
     async def delete(self, answer_id):
-        self.write("AnswerByIdHandler: DELETE")
+        try:
+            self.application.db.delete(self.answer)
+            self.application.db.commit()
+        except SQLAlchemyError as error:
+            self.application.db.rollback()
+            raise InternalServerError('Unable to delete the answer.', error)
+
+        self.set_status(204)
+        self.finish()

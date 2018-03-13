@@ -14,17 +14,26 @@ services:
             - "5000:5000"
         links:
             - mix-answer-postgres:db
+            - mix-answer-redis:redis
 
     mix-answer-postgres:
         image: postgres:9.4
         container_name: mix-answer-postgres
         network_mode: bridge
         volumes:
-            - mix-answer-data:/var/lib/postgresql/data
+            - postgres-data:/var/lib/postgresql/data
         environment:
             - POSTGRES_USER=mixuser
             - POSTGRES_PASSWORD=mixuser
             - POSTGRES_DB=mixanswer
 
+    mix-answer-redis:
+        image: redis:3.2
+        container_name: mix-answer-redis
+        network_mode: bridge
+        volumes:
+          - redis-data:/data
+
 volumes:
-    mix-answer-data:
+    postgres-data:
+    redis-data:

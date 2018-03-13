@@ -17,7 +17,6 @@ class User(LogEntity):
     password = Column(String(500), nullable=True)
     is_admin = Column(Boolean, default=False)
 
-
     def to_dict(self):
         my_dict = LogEntity.to_dict(self)
         my_dict.update({

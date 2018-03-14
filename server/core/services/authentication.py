@@ -84,6 +84,9 @@ class AuthenticationService:
 
         return user
 
+    async def logout(self):
+        self.application.session_store.unregister(self.request_handler)
+
     @classmethod
     def requires_login(cls, func):
         """

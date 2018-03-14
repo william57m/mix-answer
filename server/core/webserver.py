@@ -13,10 +13,9 @@ from tornado.web import Application
 
 # Handlers
 import core.api.answers as answers_handler
-import core.api.authenticated as authenticated_handler
+import core.api.authentication as authentication_handler
 import core.api.init as init_handler
 import core.api.questions as questions_handler
-import core.api.login as login_handler
 import core.api.tags as tags_handler
 import core.api.users as users_handler
 import core.api.votes as votes_handler
@@ -31,7 +30,7 @@ class WebServer(Application):
 
     def register_routes(self):
         return [
-            (r'/authenticated/?', authenticated_handler.AuthenticatedHandler),
+            (r'/authenticated/?', authentication_handler.AuthenticatedHandler),
             (r'/init/?', init_handler.InitHandler),
             # Questions
             (r'/questions/?', questions_handler.QuestionHandler),
@@ -45,7 +44,8 @@ class WebServer(Application):
             (r'/tags/?', tags_handler.TagHandler),
             (r'/tags/(?P<tag_id>[0-9]+)', tags_handler.TagByIdHandler),
             # Users
-            (r'/login/?', login_handler.LoginHandler),
+            (r'/login/?', authentication_handler.LoginHandler),
+            (r'/logout/?', authentication_handler.LogoutHandler),
             (r'/users/?', users_handler.UserHandler),
             (r'/users/(?P<vote_id>[0-9]+)', users_handler.UserByIdHandler)
         ]

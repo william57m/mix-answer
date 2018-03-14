@@ -34,6 +34,18 @@ services:
         volumes:
           - redis-data:/data
 
+    mix-answer-ui:
+        build: 
+            context: ui
+            dockerfile: Dockerfile
+        container_name: mix-answer-ui
+        network_mode: bridge
+        ports:
+            - "8081:8081"
+        volumes:
+            - ./ui/app:/home/webapp/app
+            - ./ui/scripts:/home/webapp/scripts
+
 volumes:
     postgres-data:
     redis-data:

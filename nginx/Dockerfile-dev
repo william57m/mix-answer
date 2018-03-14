@@ -1,0 +1,20 @@
+FROM        nginx:1.11.1
+
+# Environment variables
+ENV         HOME=/home/webapp
+ENV         CONF_DIR=/etc/nginx/conf.d
+ENV         LOG_DIR=/var/log/nginx
+
+
+# Remove old logs
+RUN         rm $LOG_DIR/access.log $LOG_DIR/error.log
+VOLUME      ["$LOG_DIR"]
+
+# This will reuse the cache and save a significant amout of time
+# Unless package.json has changed. In that case all the commands
+WORKDIR     $HOME
+
+# Adding config
+ADD         ./nginx.dev.conf                $CONF_DIR/default.conf
+
+CMD         ["nginx", "-g", "daemon off;"]

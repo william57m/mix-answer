@@ -1,0 +1,106 @@
+.questions-view-container {
+    height: 100%;
+    overflow-x: hidden;
+    .questions-header {
+        height: 100%;
+        margin-top: 40px;
+        border-bottom: 1px solid lightgrey;
+        .tabs {
+            list-style: none;
+            margin: 0;
+            li {
+                cursor: pointer;
+                float: right;
+                border: 1px solid lightgrey;
+                border-color: white;
+                padding: 10px;
+                position: relative;
+                display: block;
+                &.active {
+                    cursor: default;
+                    border-top: 2px solid $primary-color;
+                    border-color: lightgrey;
+                    border-top-color: $primary-color;
+                    border-bottom-color: white;
+                    margin-bottom: -1px;
+                }
+            }
+        }
+    }
+    .questions-body {
+        height: 100%;
+        padding: 0;
+        .questions-row {
+            border-bottom: 1px solid lightgrey;
+            height: 100%;
+            .questions-stats {
+                width: 300px;
+                vertical-align: top;
+                display: inline-block;
+                padding: 17px 25px;
+                .stat {
+                    color: #848d95;
+                    min-width: 40px;
+                    text-align: center;
+                    display: inline-block;
+                    margin-right: 40px;
+                    .stat-count {
+                        color: #6a737c;
+                        font-size: 1.3333em;
+                    }
+                    .stat-label {
+                        font-size: 11px;
+                    }
+                }
+            }
+            .questions-description {
+                width: calc(100% - 300px);
+                vertical-align: top;
+                display: inline-block;
+                padding: 17px 0px;
+                .description-title {
+                    color: #07C;
+                    cursor: pointer;
+                    word-wrap: break-word;
+                    &:hover {
+                        opacity: 0.8;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.description-tags {
+    display: inline-block;
+    ul {
+        padding: 0;
+        margin: 0;
+        margin-top: 10px;
+        li {
+            cursor: default;
+            float: left;
+            font-size: 11px;
+            list-style: none;
+            margin: 3px 5px 0px 0px;
+            padding: 3px 10px;
+            background: #E1ECF4;
+            color: #39739d;
+            &:hover {
+                background: #b2d1e7;
+            }
+        }
+    }
+}
+.description-footer {
+    float: right;
+    color: #9199a1;
+    font-size: 11px;
+    .description-user {
+        color: #07C;
+        cursor: pointer;
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}

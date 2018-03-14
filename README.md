@@ -15,6 +15,8 @@ Mix Answer uses modern tools
 
 
 ## Development
+
+- Setup
 ```
 # Build images
 docker-compose build
@@ -26,6 +28,10 @@ docker-compose up -d
 docker-compose run --rm --no-deps mix-answer-server python scripts/init_db.py --config config/dev.conf --data_test true
 ```
 
+- You can now access the UI
+```
+http://localhost:8080
+```
 
 ## Tests
 ```

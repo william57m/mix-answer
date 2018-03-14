@@ -1,0 +1,77 @@
+.answer-header {
+    height: 50px;
+    padding: 0 100px;
+    border-bottom: 1px solid lightgrey;
+    background-color: white;
+    overflow: hidden;
+
+    .header-wrapper {
+        width: 1000px;
+        margin: auto;
+    }
+
+    .header-logo {
+        float: left;
+        cursor: pointer;
+
+        .header-img {
+            float: left;
+            height: 34px;
+            margin-top: 8px;
+        }
+        .header-title {
+            float: left;
+            height: 50px;
+            line-height: 50px;
+            font-size: 22px;
+            color: #606060;
+            margin: 0px 10px;
+        }
+    }
+
+    .header-input {
+        height: 50px;
+        float: left;
+        margin-left: 50px;
+        input {
+            height: 50px;
+            width: 300px;
+            border: 1px solid #E0E0E0;
+            border-top: 0px;
+            border-bottom: 0px;
+            padding-left: 10px;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+    }
+
+    .header-buttons-container {
+        list-style: none;
+        float: left;
+        margin: 0;
+        li {
+            cursor: pointer;
+            display: inline-block;
+            padding: 15px;
+            &:first-child {
+                margin-left: 10px;
+            }
+            &.active {
+                background: #f2f2f2;
+                border-top: 2px solid $primary-color;
+            }
+            a {
+                text-decoration: none;
+                color: #535a60;
+            }
+            &:hover {
+                background: #f2f2f2;
+                border-top: 2px solid $primary-color;
+            }
+        }
+
+        &.header-buttons-container-right {
+            float: right;
+        }
+    }
+}

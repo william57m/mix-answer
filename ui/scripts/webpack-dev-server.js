@@ -7,7 +7,7 @@ const config = require('./webpack.config.dev');
 
 // Constants
 const HOST = '0.0.0.0';
-const PORT = 8081;
+const PORT = 8080;
 const RELOAD_ON_CHANGE = true;
 const POLL_IN_MS = 1000;
 

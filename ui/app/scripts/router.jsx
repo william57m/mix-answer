@@ -9,13 +9,8 @@ import App from './components/App';
 import AskQuestionView from './components/ask/AskQuestionView';
 import QuestionView from './components/question/QuestionView';
 import QuestionsViews from './components/questions/QuestionsView';
+import LoginView from './components/LoginView';
 
-
-class LoginPage extends React.Component {
-    render() {
-        return <div>Login Page</div>;
-    }
-}
 
 class ParentRoute extends React.Component {
     // In the future, add login logic here
@@ -41,7 +36,7 @@ class MainComponent extends React.Component {
             <HashRouter>
                 <App>
                     <Switch>
-                        <Route path="/login" component={LoginPage} />
+                        <Route path="/login" component={LoginView} />
                         <Route path="/questions" component={QuestionsViews} />
                         <Route path="/question/ask" component={AskQuestionView} />
                         <Route path="/question/:id" component={QuestionView} />

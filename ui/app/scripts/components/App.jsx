@@ -3,9 +3,13 @@ import React from 'react';
 
 // App imports
 import NavBar from './common/NavBar';
+import SessionStore from '../stores/session';
 
 
 class App extends React.Component {
+    componentDidMount() {
+        SessionStore.init();
+    }
     render() {
         return (
             <React.Fragment>

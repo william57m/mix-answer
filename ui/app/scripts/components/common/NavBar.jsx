@@ -1,12 +1,23 @@
 // Lib imports
+import { observer } from 'mobx-react';
 import React from 'react';
 
 // App imports
 import RouteService from '../../services/RouteService';
+import SessionStore from '../../stores/session';
 
 
+@observer
 class NavBar extends React.Component {
+    constructor(props) {
+        super(props);
+        this.logout = this.logout.bind(this);
+    }
+    logout() {
+        SessionStore.logout();
+    }
     render() {
+        var user = SessionStore.user;
         return (
             <div className="answer-header">
                 <div className="header-wrapper">
@@ -19,8 +30,13 @@ class NavBar extends React.Component {
                     </div>
                     <ul className="header-buttons-container header-buttons-container-right">
                         <li onClick={() => RouteService.goTo('/question/ask')}><a>Ask a Question</a></li>
-                        <li><a><i className="fa fa-user"/> John</a></li>
-                        <li><a><i className="fa fa-lock"/> Log in</a></li>
+                        {user ?
+                            <li><a><i className="fa fa-user"/> {user.firstname}</a></li> : null
+                        }
+                        {user ?
+                            <li onClick={this.logout}><a><i className="fa fa-lock" /> Logout</a></li> :
+                            <li onClick={() => RouteService.goTo('/login')}><a><i className="fa fa-lock" /> Log in</a></li>
+                        }
                     </ul>
                 </div>
             </div>

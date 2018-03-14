@@ -4,6 +4,7 @@ import { Col, Row, Button } from 'react-bootstrap';
 import { WithContext as ReactTags } from 'react-tag-input';
 import EditorText from '../EditorText';
 
+
 class TagInput extends React.Component {
     constructor(props) {
         super(props);
@@ -66,41 +67,25 @@ class AskQuestionView extends React.Component {
         return (
             <div className="question-ask-container">
                 <Row>
-                    <Col xs={1} md={2} lg={3} />
-
-                    <Col className="question-ask-title" xs={10} md={8} lg={6}>
+                    <Col className="question-ask-title">
                         <span className="question-ask-label">Title</span>
                         <input placeholder="What is your question? Please be specific."/>
                     </Col>
-
-                    <Col xs={1} md={2} lg={3}/>
                 </Row>
                 <Row>
-                    <Col xs={1} md={2} lg={3} />
-
-                    <Col className="question-ask-body" xs={10} md={8} lg={6}>
+                    <Col className="question-ask-body">
                         <EditorText />
                     </Col>
-
-                    <Col xs={1} md={2} lg={3} />
                 </Row>
                 <Row>
-                    <Col xs={1} md={2} lg={3} />
-
-                    <Col className="question-ask-tag" xs={10} md={8} lg={6}>
+                    <Col className="question-ask-tag">
                         <TagInput />
                     </Col>
-
-                    <Col xs={1} md={2} lg={3} />
                 </Row>
                 <Row>
-                    <Col xs={1} md={2} lg={3} />
-
-                    <Col className="question-ask-tag" xs={10} md={8} lg={6}>
+                    <Col className="question-ask-tag">
                         <Button bsStyle="primary">Post Your Question</Button>
                     </Col>
-
-                    <Col xs={1} md={2} lg={3} />
                 </Row>
             </div>
         );

@@ -1,0 +1,21 @@
+// ============ Containers ============
+html, body {
+    width:                  100%;
+    height:                 100%;
+    min-width:              1200px;
+    overflow-x:             auto;
+    overflow-y:             hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing:    antialiased;
+    font-smoothing:         antialiased;
+    text-rendering:         optimizeLegibility;
+}
+
+body {
+    font-family: 'Roboto', 'Avenir Next', 'Helvetica Neue', 'Arial';
+}
+
+.answer-page {
+    width: 1000px;
+    margin: auto;
+}

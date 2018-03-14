@@ -3,6 +3,7 @@ import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import RouteService from '../../services/RouteService';
 
+
 class Tabs extends React.Component {
     render() {
         return (
@@ -107,27 +108,19 @@ class QuestionsView extends React.Component {
         return (
             <div className="questions-view-container">
                 <Row>
-                    <Col xs={1} md={2} lg={2} />
-
-                    <Col className="questions-header" xs={10} md={8} lg={8}>
-                        <Col bsClass="left" md={4}>
+                    <Col className="questions-header">
+                        <Col md={4}>
                             <h4 className="left">Top Questions</h4>
                         </Col>
-                        <Col bsClass="right" md={8}>
+                        <Col md={8}>
                             <Tabs activeTab={this.state.activeTab} selectTab={tab => this.setState({ activeTab: tab })}/>
                         </Col>
                     </Col>
-
-                    <Col xs={1} md={2} lg={2}/>
                 </Row>
                 <Row>
-                    <Col xs={1} md={2} lg={2} />
-
-                    <Col className="questions-body" xs={10} md={8} lg={8}>
+                    <Col className="questions-body">
                         <QuestionList />
                     </Col>
-
-                    <Col xs={1} md={2} lg={2} />
                 </Row>
             </div>
         );

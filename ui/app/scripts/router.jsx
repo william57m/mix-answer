@@ -10,6 +10,7 @@ import AskQuestionView from './components/ask/AskQuestionView';
 import QuestionView from './components/question/QuestionView';
 import QuestionsViews from './components/questions/QuestionsView';
 
+
 class LoginPage extends React.Component {
     render() {
         return <div>Login Page</div>;
@@ -38,10 +39,15 @@ class MainComponent extends React.Component {
     render() {
         return (
             <HashRouter>
-                <Switch>
-                    <ParentRoute path="/login" component={LoginPage} />
-                    <ParentRoute private path="/" component={PrivateAppRoutes} />
-                </Switch>
+                <App>
+                    <Switch>
+                        <Route path="/login" component={LoginPage} />
+                        <Route path="/questions" component={QuestionsViews} />
+                        <Route path="/question/ask" component={AskQuestionView} />
+                        <Route path="/question/:id" component={QuestionView} />
+                        <Redirect to={'/questions'} />
+                    </Switch>
+                </App>
             </HashRouter>
         );
     }

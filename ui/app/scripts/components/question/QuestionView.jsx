@@ -3,6 +3,7 @@ import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
 import EditorText from '../EditorText';
 
+
 class ContentFormat extends React.Component {
     render() {
         const { type } = this.props;
@@ -110,4 +111,3 @@ class QuestionView extends React.Component {
 }
 
 export default QuestionView;
-

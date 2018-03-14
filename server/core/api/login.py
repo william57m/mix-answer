@@ -2,7 +2,7 @@ import json
 
 from core.api import BaseRequestHandler
 from core.utils.exceptions import BadRequestError
-from core.services.authentication import Authentication
+from core.services.authentication import AuthenticationService
 
 
 class LoginHandler(BaseRequestHandler):
@@ -10,7 +10,7 @@ class LoginHandler(BaseRequestHandler):
     async def post(self):
 
         # Authentication service
-        authentication_service = Authentication(self.application)
+        authentication_service = AuthenticationService(self)
 
         # Get data
         data = json.loads(self.request.body.decode('utf-8'))

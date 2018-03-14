@@ -1,13 +1,20 @@
+import functools
+import logging
+
 from sqlalchemy.exc import SQLAlchemyError
 
 from core.db.models import User
 from core.services.ldap import LDAPClient
+from core.utils.exceptions import UnauthenticatedError
+
+log = logging.getLogger(__name__)
 
 
-class Authentication:
+class AuthenticationService:
 
-    def __init__(self, application):
-        self.application = application
+    def __init__(self, request_handler):
+        self.request_handler = request_handler
+        self.application = request_handler.application
 
     def get_user_by_email(self, email):
         user = self.application.db.query(User).filter(User.email == email).first()
@@ -24,6 +31,10 @@ class Authentication:
             self.application.db.rollback()
 
         return user
+
+    def register_session(self, user):
+        new_session = self.application.session_store.regenerate(self.request_handler, user.id)
+        return new_session
 
     async def ldap_auth(self, email, password, id_token=None):
         user = None
@@ -46,14 +57,22 @@ class Authentication:
                 if not user:
                     user = self.register_user(user_dict)
 
+                # Regenerate session
+                self.register_session(user)
+
                 return user
 
         return None
 
     def regular_auth(self, email, password):
+        # Find user
         user = self.application.db.query(User).filter(User.email == email) \
                                               .filter(User.password == password) \
                                               .first()
+        # Regenerate session
+        if user:
+            self.register_session(user)
+
         return user
 
     async def login(self, email, password):
@@ -64,3 +83,16 @@ class Authentication:
             user = await self.regular_auth(email, password)
 
         return user
+
+    @classmethod
+    def requires_login(cls, func):
+        """
+        Creates a decorator to validate there is a logged in user
+        """
+        @functools.wraps(func)
+        def _requires_login(handler, *args, **kwargs):
+            if not handler.user:
+                raise UnauthenticatedError()
+            else:
+                return func(handler, *args, **kwargs)
+        return _requires_login

@@ -1,1 +1,2 @@
 pytest==3.3.2
+redislite==3.2.311

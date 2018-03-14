@@ -10,9 +10,7 @@ DEFAULT_REDIS_DB = 0
 
 
 class RedisKeys(enum.auto):
-    """
-    Keys used in the Redis DB
-    """
+    """ Keys used in the Redis DB """
 
     session_info = 'session:{session_id}'
 
@@ -36,9 +34,19 @@ class RedisClient:
         connection_kwargs = {
             'decode_responses': True,
             'db': config.getint('redis', 'db', fallback=DEFAULT_REDIS_DB),
-            'host': config.get('redis', 'host', fallback=DEFAULT_REDIS_HOST),
-            'port': config.getint('redis', 'port', fallback=DEFAULT_REDIS_PORT)
         }
+
+        socket = config.get('redis', 'socket', fallback=None)
+
+        if socket:
+            connection_kwargs.update({
+                'unix_socket_path': socket,
+            })
+        else:
+            connection_kwargs.update({
+                'host': config.get('redis', 'host'),
+                'port': config.getint('redis', 'port', fallback=DEFAULT_REDIS_PORT),
+            })
 
         log.info('Connecting to Redis: %s', connection_kwargs)
         redis_client = redis.StrictRedis(**connection_kwargs)

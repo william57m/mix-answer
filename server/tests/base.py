@@ -1,5 +1,6 @@
 import json
 
+from redislite import StrictRedis
 from tornado.testing import AsyncHTTPTestCase
 
 from core.webserver import WebServer
@@ -8,7 +9,8 @@ from core.utils.config import parse_config
 
 app = None
 config = parse_config('config/test.conf')
-
+redis_server = StrictRedis(decode_responses=True)
+config.set('redis', 'socket', redis_server.socket_file)
 
 def end_transactions(session):
     session.rollback() if session else None

@@ -29,8 +29,6 @@ docker-compose run --rm --no-deps mix-answer-server python scripts/init_db.py --
 
 ## Tests
 ```
-cd server/tests
-
 # Build and tag the test image
 docker build -t mix-answer-test \
              -f server/tests/Dockerfile \
@@ -49,7 +47,7 @@ docker run -t --rm \
            -v /$PWD/server:/home/server \
            --link mix-answer-test-db:db \
            mix-answer-test \
-           python scripts/init_db.py --config=config/dev.conf
+           python scripts/init_db.py --config=config/test.conf
 
 # Run test
 docker run --rm -it \

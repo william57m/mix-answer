@@ -14,6 +14,7 @@ from tornado.web import Application
 # Handlers
 import core.api.answers as answers_handler
 import core.api.authenticated as authenticated_handler
+import core.api.init as init_handler
 import core.api.questions as questions_handler
 import core.api.login as login_handler
 import core.api.tags as tags_handler
@@ -31,6 +32,7 @@ class WebServer(Application):
     def register_routes(self):
         return [
             (r'/authenticated/?', authenticated_handler.AuthenticatedHandler),
+            (r'/init/?', init_handler.InitHandler),
             # Questions
             (r'/questions/?', questions_handler.QuestionHandler),
             (r'/questions/(?P<question_id>[0-9]+)', questions_handler.QuestionByIdHandler),

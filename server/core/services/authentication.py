@@ -5,6 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from core.db.models import User
 from core.services.ldap import LDAPClient
+from core.utils.exceptions import NotAllowedError
 from core.utils.exceptions import UnauthenticatedError
 
 log = logging.getLogger(__name__)
@@ -93,9 +94,28 @@ class AuthenticationService:
         Creates a decorator to validate there is a logged in user
         """
         @functools.wraps(func)
-        def _requires_login(handler, *args, **kwargs):
+        def wrapper(handler, *args, **kwargs):
             if not handler.user:
                 raise UnauthenticatedError()
             else:
                 return func(handler, *args, **kwargs)
-        return _requires_login
+        return wrapper
+
+    @classmethod
+    def requires_ownership(cls, func):
+        """
+        Creates a decorator to validate there is a logged in user
+        """
+        @functools.wraps(func)
+        def wrapper(handler, *args, **kwargs):
+            if is_creator(handler.user, handler.object):
+                return func(handler, *args, **kwargs)
+            else:
+                raise NotAllowedError()
+        return wrapper
+
+
+def is_creator(user, obj):
+    """ Check if the user is the creator """
+
+    return user.id == obj.creator_id

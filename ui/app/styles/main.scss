@@ -10,8 +10,11 @@ $fa-font-path: ("../../node_modules/font-awesome/fonts/");
 @import "_base";
 
 // Components
+@import "components/app";
+
+@import "components/common/navbar";
+@import "components/common/spinner";
+
 @import "components/ask/ask-question-view";
 @import "components/question/question-view";
 @import "components/questions/questions-view";
-@import "components/app";
-@import "components/navbar";

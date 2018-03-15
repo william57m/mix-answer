@@ -23,6 +23,7 @@ class EditorText extends React.Component {
                 toolbarClassName="editor-toolbar"
                 wrapperClassName="editor-wrapper"
                 editorClassName="editor"
+                onChange={this.props.onChange}
                 // toolbar={{
                 //     blockType: {
                 //     inDropdown: true,

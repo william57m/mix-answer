@@ -24,6 +24,21 @@ class QuestionStore {
         });
         return question;
     }
+    create(title, body, tags=[]) {
+        var data = {
+            title: title,
+            body: body,
+            tags: tags
+        };
+        return $.ajax({
+            method: 'POST',
+            url: URL.questions,
+            dataType: 'json',
+            data: JSON.stringify(data)
+        }).then(result => {
+            this.questions.push(result);
+        });
+    }
 }
 
 export default new QuestionStore();

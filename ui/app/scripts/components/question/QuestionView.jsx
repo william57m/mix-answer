@@ -1,37 +1,57 @@
 // Lib imports
+import { Button } from 'react-bootstrap';
+import { observer } from 'mobx-react';
+import moment from 'moment';
 import React from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
-import EditorText from '../EditorText';
+
+// App imports
+import AnswerStore from '../../stores/answer';
+import EditorText from '../common/EditorText';
+import QuestionStore from '../../stores/question';
+import CONSTANTS from '../../services/constants';
+import SessionStore from '../../stores/session';
 
 
-class ContentFormat extends React.Component {
+class Answer extends React.Component {
     render() {
         const { type } = this.props;
+        var tags;
+        var user;
+        var date;
+        if (type === 'question') {
+            date = moment(this.props.question.created_at).format(CONSTANTS.DATETIME_FORMAT);
+            user = this.props.question.user.firstname + ' ' + this.props.question.user.lastname;
+            tags = this.props.question.tags.map(tag => {
+                return (
+                    <li>{tag}</li>
+                );
+            });
+        } else {
+            date = moment(this.props.answer.created_at).format(CONSTANTS.DATETIME_FORMAT);
+            user = this.props.answer.user.firstname + ' ' + this.props.answer.user.lastname;
+        }
         return (
             <div className={`content-format ${type === 'question' ? 'question-type' : 'answer-type'}`}>
                 <div className="left-vote">
                     <div><i className={'fa fa-caret-up'} /></div>
-                    <div>218</div>
+                    <div>N/A</div>
                     <div><i className={'fa fa-caret-down'} /></div>
                 </div>
                 <div className="right-content">
-                    <div>
-                        help, not enough brains to solve the problem. The search does not give results when entering information about a category (an example of a search in the code, only in categories: heroes), you need to enter an appropriate value in the field and display the table for one element, depending on the category, heroes, ship or planet. In addition, it is desirable to enter a letter, display the necessary objects, ships or planets (for example: enter the letter d, and in the field I see: Darth Vader, dart sirius, etc.)
-                        help, not enough brains to solve the problem. The search does not give results when entering information about a category (an example of a search in the code, only in categories: heroes), you need to enter an appropriate value in the field and display the table for one element, depending on the category, heroes, ship or planet. In addition, it is desirable to enter a letter, display the necessary objects, ships or planets (for example: enter the letter d, and in the field I see: Darth Vader, dart sirius, etc.)
-                    </div>
+                    {type === 'question' ?
+                        <div dangerouslySetInnerHTML={{__html: this.props.question.body}} /> :
+                        <div dangerouslySetInnerHTML={{__html: this.props.answer.message}} />
+                    }
                     {type === 'question' ?
                         <div className="description-tags">
                             <ul>
-                                <li>swift</li>
-                                <li>apple-watch</li>
-                                <li>watch-os</li>
-                                <li>wkinterfacecontroller</li>
+                                {tags}
                             </ul>
                         </div> : null
                     }
                     <div>
                         <span className="description-footer">
-                            {`${type === 'question' ? 'asked' : 'answered'}`} 4 hours ago <span className="description-user">someuser</span>
+                            {`${type === 'question' ? 'asked' : 'answered'}`} {date} <span className="description-user">{user}</span>
                         </span>
                     </div>
                     <div>
@@ -45,17 +65,18 @@ class ContentFormat extends React.Component {
 
 class Answers extends React.Component {
     render() {
-        const answers = [1, 2, 3, 4, 5];
+        const answers = this.props.answers.map(answer => {
+            return (
+                <Answer key={answer.id} answer={answer} />
+            );
+        });
         return (
             answers.length > 0 ?
                 <React.Fragment>
                     <div className="separator">
                         {answers.length} Answers
                     </div>
-                    <ContentFormat type="answer"/>
-                    <ContentFormat type="answer"/>
-                    <ContentFormat type="answer"/>
-                    <ContentFormat type="answer"/>
+                    {answers}
                 </React.Fragment> : null
         );
     }
@@ -66,9 +87,9 @@ class Question extends React.Component {
         return (
             <React.Fragment>
                 <div className="question-title">
-                    how to output the information entered into the search with a XMLHttpRequest
+                    {this.props.question.title}
                 </div>
-                <ContentFormat type="question" />
+                <Answer type="question" question={this.props.question} />
             </React.Fragment>
         );
     }
@@ -90,21 +111,30 @@ class Reply extends React.Component {
     }
 }
 
+@observer
 class QuestionView extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            questionId: this.props.match.params.id
+        };
+    }
+    componentDidMount() {
+        QuestionStore.loadAll();
+        AnswerStore.loadAll(this.state.questionId);
+    }
     render() {
+        var canReply = SessionStore.user ? true : false;
+        var question = QuestionStore.get(this.state.questionId);
         return (
             <div className="question-view">
-                <Row>
-                    <Col xs={1} md={2} lg={3} />
-
-                    <Col className="question-content-container" xs={10} md={8} lg={6}>
-                        <Question />
-                        <Answers />
-                        <Reply />
-                    </Col>
-
-                    <Col xs={1} md={2} lg={3}/>
-                </Row>
+                <div className="question-content-container">
+                    {question ? <Question question={question} /> : null}
+                    <Answers answers={AnswerStore.answers} />
+                    {canReply ?
+                        <Reply /> : null
+                    }
+                </div>
             </div>
         );
     }

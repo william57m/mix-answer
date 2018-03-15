@@ -2,7 +2,10 @@
 import React from 'react';
 import { Col, Row, Button } from 'react-bootstrap';
 import { WithContext as ReactTags } from 'react-tag-input';
-import EditorText from '../EditorText';
+
+// App imports
+import EditorText from '../common/EditorText';
+import QuestionStore from '../../stores/question';
 
 
 class TagInput extends React.Component {
@@ -63,18 +66,41 @@ class TagInput extends React.Component {
 }
 
 class AskQuestionView extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            title: '',
+            body: ''
+        };
+        this.onBodyChange = this.onBodyChange.bind(this);
+        this.onTitleChange = this.onTitleChange.bind(this);
+        this.postQuestion = this.postQuestion.bind(this);
+    }
+
+    // On change handlers
+    onBodyChange(state) {
+        this.setState({body: state.blocks[0].text});
+    }
+    onTitleChange() {
+        this.setState({title: this.refs.inputTitle.value});
+    }
+    postQuestion() {
+        var title = this.state.title;
+        var body = this.state.body;
+        QuestionStore.create(title, body);
+    }
     render() {
         return (
             <div className="question-ask-container">
                 <Row>
                     <Col className="question-ask-title">
                         <span className="question-ask-label">Title</span>
-                        <input placeholder="What is your question? Please be specific."/>
+                        <input ref="inputTitle" value={this.state.title} onChange={this.onTitleChange} placeholder="What is your question? Please be specific."/>
                     </Col>
                 </Row>
                 <Row>
                     <Col className="question-ask-body">
-                        <EditorText />
+                        <EditorText onChange={this.onBodyChange} />
                     </Col>
                 </Row>
                 <Row>
@@ -84,7 +110,7 @@ class AskQuestionView extends React.Component {
                 </Row>
                 <Row>
                     <Col className="question-ask-tag">
-                        <Button bsStyle="primary">Post Your Question</Button>
+                        <Button bsStyle="primary" onClick={this.postQuestion}>Post Your Question</Button>
                     </Col>
                 </Row>
             </div>

@@ -42,12 +42,10 @@ class WebServer(Application):
             (r'/answers/(?P<answer_id>[0-9]+)/votes/?', votes_handler.VoteHandler),
             # Tags
             (r'/tags/?', tags_handler.TagHandler),
-            (r'/tags/(?P<tag_id>[0-9]+)', tags_handler.TagByIdHandler),
             # Users
             (r'/login/?', authentication_handler.LoginHandler),
             (r'/logout/?', authentication_handler.LogoutHandler),
-            (r'/users/?', users_handler.UserHandler),
-            (r'/users/(?P<vote_id>[0-9]+)', users_handler.UserByIdHandler)
+            (r'/users/?', users_handler.UserHandler)
         ]
 
     def __init__(self, config):

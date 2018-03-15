@@ -3,6 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from core.api import BaseRequestHandler
 from core.db.models import Answer
 from core.db.models import Vote
+from core.services.authentication import AuthenticationService
 from core.utils.exceptions import InternalServerError
 
 
@@ -14,11 +15,11 @@ class VoteHandler(BaseRequestHandler):
             answer_id = self.path_kwargs['answer_id']
             self.answer = self.get_object_by_id(Answer, answer_id)
 
+    @AuthenticationService.requires_login
     async def post(self, answer_id):
 
         # Get user id
-        # TODO: take the real user id when the authentication system is ready
-        user_id = 1
+        user_id = self.user.id
 
         # Check vote
         vote = self.application.db.query(Vote).filter(Vote.answer_id == answer_id) \

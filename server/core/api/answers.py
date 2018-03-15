@@ -5,6 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from core.api import BaseRequestHandler
 from core.db.models import Answer
 from core.db.models import Question
+from core.services.authentication import AuthenticationService
 from core.utils.exceptions import InternalServerError
 from core.utils.query import check_param
 from core.utils.query import extract_metadata
@@ -41,12 +42,13 @@ class AnswerHandler(BaseRequestHandler):
         self.write(ret)
         self.finish()
 
+    @AuthenticationService.requires_login
     async def post(self, question_id):
 
         # Create data
         data = json.loads(self.request.body.decode('utf-8'))
         message = check_param(data, name='message', type='string', required=True)
-        answer = Answer(message=message, question_id=question_id)
+        answer = Answer(message=message, question_id=question_id, user=self.user)
 
         # Commit in DB
         try:
@@ -67,14 +69,16 @@ class AnswerByIdHandler(BaseRequestHandler):
     def prepare(self):
         super().prepare()
         if self.request.method != 'OPTIONS':
-            answer_id = self.path_kwargs['answer_id']
-            self.answer = self.get_object_by_id(Answer, answer_id)
+            obj_id = self.path_kwargs['answer_id']
+            self.object = self.get_object_by_id(Answer, obj_id)
 
+    @AuthenticationService.requires_login
+    @AuthenticationService.requires_ownership
     async def put(self, answer_id):
 
         # Update basic properties
         data = json.loads(self.request.body.decode('utf-8'))
-        update_by_property_list(['message'], data, self.answer)
+        update_by_property_list(['message'], data, self.object)
 
         # Commit in DB
         try:
@@ -85,12 +89,14 @@ class AnswerByIdHandler(BaseRequestHandler):
 
         # Returns response
         self.set_status(200)
-        self.write({'data': self.answer.to_dict()})
+        self.write({'data': self.object.to_dict()})
         self.finish()
 
+    @AuthenticationService.requires_login
+    @AuthenticationService.requires_ownership
     async def delete(self, answer_id):
         try:
-            self.application.db.delete(self.answer)
+            self.application.db.delete(self.object)
             self.application.db.commit()
         except SQLAlchemyError as error:
             self.application.db.rollback()

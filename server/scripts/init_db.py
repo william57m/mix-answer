@@ -78,9 +78,9 @@ def add_data_test(db):
     db.add(u2)
 
     # Add answers
-    a1 = Answer(message='Message 1')
-    a2 = Answer(message='Message 2')
-    a3 = Answer(message='Message 3')
+    a1 = Answer(message='Message 1', user=u2)
+    a2 = Answer(message='Message 2', user=u2)
+    a3 = Answer(message='Message 3', user=u1)
     db.add(a1)
     db.add(a2)
     db.add(a3)

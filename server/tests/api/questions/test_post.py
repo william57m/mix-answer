@@ -1,9 +1,8 @@
 import json
 
 from core.db.models import Question
-from core.db.models import User
 
-from tests.base import BaseAppTestCase
+from tests.base import AuthAppTestCase
 
 URI = '/questions'
 
@@ -15,7 +14,7 @@ def get_valid_data():
     }
 
 
-class TestWithMissingParams(BaseAppTestCase):
+class TestWithMissingParams(AuthAppTestCase):
 
     def tearDown(self):
         """ Teardown test """
@@ -54,10 +53,7 @@ class TestWithMissingParams(BaseAppTestCase):
         self.assertEqual('Param body is missing', body["error"]['message'])
 
 
-class TestWithValidParams(BaseAppTestCase):
-
-    def setUp(self):
-        super().setUp()
+class TestWithValidParams(AuthAppTestCase):
 
     def tearDown(self):
         self.db.query(Question).delete()

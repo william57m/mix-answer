@@ -6,8 +6,6 @@ from core.services.redis import RedisKeys
 
 log = logging.getLogger(__name__)
 
-COOKIE_NAME = '_mixanswer'
-
 
 class SessionStore:
     """
@@ -20,6 +18,8 @@ class SessionStore:
 
     The store contains method to cull, which should be invoked periodically.
     """
+
+    COOKIE_NAME = '_mixanswer'
 
     def __init__(self, redis_client, expires=1800, is_secure=False):
         self.expires = expires
@@ -92,7 +92,7 @@ class SessionStore:
 
     def get_cookie_info(self, session_id):
         cookie_info = {
-            'name': COOKIE_NAME,
+            'name': self.COOKIE_NAME,
             'value': session_id,
             'httponly': True,
             'expires_days': None,
@@ -107,14 +107,14 @@ class SessionStore:
 
         # For the case when the session is registered then unregistered while
         # handling the same HTTP operation...
-        request_handler.clear_cookie(COOKIE_NAME)
+        request_handler.clear_cookie(self.COOKIE_NAME)
 
-        session_id = request_handler.get_secure_cookie(COOKIE_NAME)
+        session_id = request_handler.get_secure_cookie(self.COOKIE_NAME)
         if session_id:
             log.debug("Unregistering session: %s", session_id)
             session_id = session_id.decode('utf-8')
             unregistered = self.delete_sessions(session_id) == 1
-            request_handler.clear_cookie(COOKIE_NAME)
+            request_handler.clear_cookie(self.COOKIE_NAME)
 
         return unregistered
 
@@ -180,12 +180,12 @@ class SessionStore:
         Uses tornado built-in method. If it fails but the session cookie is
         seemingly present, use the more permissive `cookies` lib.
         """
-        encoded_session_id = request_handler.get_cookie(COOKIE_NAME)
+        encoded_session_id = request_handler.get_cookie(cls.COOKIE_NAME)
 
         if encoded_session_id is None:
             log.warn("Session could not be retrieved from cookie")
 
-        session_id = request_handler.get_secure_cookie(name=COOKIE_NAME, value=encoded_session_id)
+        session_id = request_handler.get_secure_cookie(name=cls.COOKIE_NAME, value=encoded_session_id)
         if session_id:
             session_id = session_id.decode('utf-8')
 

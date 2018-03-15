@@ -28,6 +28,8 @@ class Question(LogEntity):
             'id': self.id,
             'title': self.title,
             'body': self.body,
+            'nb_answers': len(self.answers),
+            'tags': [tag.label for tag in self.tags],
             'user': self.user.to_dict()
         })
         return my_dict

@@ -26,6 +26,11 @@ class BadRequestError(ServerHTTPError):
         super().__init__(400, *args, **kwargs)
 
 
+class NotAllowedError(ServerHTTPError):
+    def __init__(self, *args, **kwargs):
+        super().__init__(401, *args, **kwargs)
+
+
 class UnauthenticatedError(ServerHTTPError):
     def __init__(self, *args, **kwargs):
         super().__init__(403, *args, **kwargs)

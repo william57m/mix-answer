@@ -1,12 +1,12 @@
 from core.db.models import Question
 from core.db.models import User
 
-from tests.base import BaseAppTestCase
+from tests.base import AuthAppTestCase
 
 URI = '/questions/{id}'
 
 
-class TestWithInvalidParams(BaseAppTestCase):
+class TestWithInvalidParams(AuthAppTestCase):
 
     def test_with_invalid_id(self):
 
@@ -19,13 +19,13 @@ class TestWithInvalidParams(BaseAppTestCase):
         self.assertEqual('No Question with id 0', body['error']['message'])
 
 
-class TestWithValidParams(BaseAppTestCase):
+class TestWithValidParams(AuthAppTestCase):
 
     def setUp(self):
 
         super().setUp()
         u = User(firstname='Fernando', lastname='Alonso', email='fernando.alonso@mclaren.com')
-        self.question = Question(title='Title', body='Body', user=u)
+        self.question = Question(title='Title', body='Body', user=u, creator_id=self.request_user.id)
         self.db.add(u)
         self.db.add(self.question)
         self.db.commit()

@@ -4,7 +4,7 @@ from core.db.models import Answer
 from core.db.models import Question
 from core.db.models import User
 
-from tests.base import BaseAppTestCase
+from tests.base import AuthAppTestCase
 
 URI = '/questions/{id}/answers'
 
@@ -15,7 +15,7 @@ def get_valid_data():
     }
 
 
-class TestWithInvalidParams(BaseAppTestCase):
+class TestWithInvalidParams(AuthAppTestCase):
 
     def test_with_invalid_id(self):
 
@@ -31,7 +31,7 @@ class TestWithInvalidParams(BaseAppTestCase):
         self.assertEqual('No Question with id 0', body['error']['message'])
 
 
-class TestWithValidParams(BaseAppTestCase):
+class TestWithValidParams(AuthAppTestCase):
 
     def setUp(self):
         super().setUp()

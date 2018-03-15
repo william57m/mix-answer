@@ -3,12 +3,12 @@ from core.db.models import Question
 from core.db.models import User
 from core.db.models import Vote
 
-from tests.base import BaseAppTestCase
+from tests.base import AuthAppTestCase
 
 URI = '/answers/{id}/votes'
 
 
-class TestWithInvalidParams(BaseAppTestCase):
+class TestWithInvalidParams(AuthAppTestCase):
 
     def test_with_invalid_id(self):
 
@@ -21,20 +21,20 @@ class TestWithInvalidParams(BaseAppTestCase):
         self.assertEqual('No Answer with id 0', body['error']['message'])
 
 
-class TestWithValidParams(BaseAppTestCase):
+class TestWithValidParams(AuthAppTestCase):
 
     def setUp(self):
         super().setUp()
         self.u1 = User(id=1, firstname="Fernando", lastname="Alonso", email="fernando.alonso@mclaren.com")
         q1 = Question(title="What is the fatest car?", body="Which team should I chose to win the F1 world championship?", user=self.u1)
-        self.a1 = Answer(message="Message 1", question=q1)
-        self.a2 = Answer(message="Message 1", question=q1)
+        self.a1 = Answer(message="Message 1", question=q1, user=self.u1)
+        self.a2 = Answer(message="Message 1", question=q1, user=self.u1)
         self.db.add(self.u1)
         self.db.add(q1)
         self.db.add(self.a1)
         self.db.add(self.a2)
         self.db.commit()
-        v = Vote(user_id=self.u1.id, answer_id=self.a2.id)
+        v = Vote(user_id=self.request_user.id, answer_id=self.a2.id)
         self.db.add(v)
         self.db.commit()
 
@@ -55,7 +55,7 @@ class TestWithValidParams(BaseAppTestCase):
         self.assertEqual(201, response.code)
 
         # Check in DB
-        vote = self.db.query(Vote).filter(Vote.user_id == self.u1.id) \
+        vote = self.db.query(Vote).filter(Vote.user_id == self.request_user.id) \
                                   .filter(Vote.answer_id == self.a1.id) \
                                   .first()
         self.assertNotEqual(None, vote)
@@ -69,7 +69,7 @@ class TestWithValidParams(BaseAppTestCase):
         self.assertEqual(201, response.code)
 
         # Check in DB
-        vote = self.db.query(Vote).filter(Vote.user_id == self.u1.id) \
+        vote = self.db.query(Vote).filter(Vote.user_id == self.request_user.id) \
                                   .filter(Vote.answer_id == self.a2.id) \
                                   .first()
         self.assertEqual(None, vote)

@@ -68,11 +68,8 @@ docker run --rm -it \
 TO WRITE
 
 
-## Future Features
-- Add views feature (check implementation [here](https://meta.stackexchange.com/questions/36728/how-are-the-number-of-views-in-a-question-calculated))
-- Add ability to validate a response
-- Add register user endpoint (currently works with company LDAP only)
-- Badge for users (to distinguish reliable users)
+## Roadmap
+[Open roadmap](https://github.com/william57m/mix-answer/wiki/Roadmap)
 
 
 ## Contribution

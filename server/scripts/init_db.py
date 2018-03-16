@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from core.db.models import Answer
 from core.db.models import Base
 from core.db.models import Question
+from core.db.models import Tag
 from core.db.models import User
 from core.db.models import Vote
 
@@ -77,19 +78,31 @@ def add_data_test(db):
     db.add(u1)
     db.add(u2)
 
+    # Add tags
+    t1 = Tag(label='JavaScript')
+    t2 = Tag(label='ReactJS')
+    t3 = Tag(label='Weekend')
+    t4 = Tag(label='Setup')
+    t5 = Tag(label='Docker')
+    db.add(t1)
+    db.add(t2)
+    db.add(t3)
+    db.add(t4)
+    db.add(t5)
+
     # Add answers
-    a1 = Answer(message='Message 1', user=u2)
-    a2 = Answer(message='Message 2', user=u2)
-    a3 = Answer(message='Message 3', user=u1)
+    a1 = Answer(message='Mix Answer has been setup to work with Docker. You just need to install Docker on your machine and follow the instruction, it\'s as easy as that.', user=u2)
+    a2 = Answer(message='I confirm, just follow the instructions, it\'s so easy.', user=u2)
+    a3 = Answer(message='There are a lot of popular frameworks today so it\'s difficult to choose. I can recommend you ReactJS, this is the tool used for Mix Answer', user=u1)
     db.add(a1)
     db.add(a2)
     db.add(a3)
     db.flush()
 
     # Add questions
-    db.add(Question(title='Title1', body='Body1', user_id=u1.id, answers=[a1, a2]))
-    db.add(Question(title='Title2', body='Body2', user_id=u1.id, answers=[a3]))
-    db.add(Question(title='Title3', body='Body3', user_id=u2.id, answers=[]))
+    db.add(Question(title='How do you setup Mix Answer?', body='I\'m trying to install Mix Answer, what tool do I need?', user_id=u1.id, answers=[a1, a2], tags=[t4, t5]))
+    db.add(Question(title='What is the best front-end technology?', body='I\'d like to create a website but I don\'t know which framework to use', user_id=u1.id, answers=[a3], tags=[t1, t4, t5]))
+    db.add(Question(title='What did you plan for this weekend?', body='What are you planning to do this weekend?', user_id=u2.id, tags=[t3]))
 
     # Add votes
     v1 = Vote(answer_id=a1.id, user_id=u1.id)

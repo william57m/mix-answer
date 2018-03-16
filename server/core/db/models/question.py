@@ -2,10 +2,19 @@ from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
+from sqlalchemy import Table
 
 from sqlalchemy.orm import relationship
 
+from core.db.models import Base
 from core.db.models import LogEntity
+
+
+association_table = Table(
+    'question__tag', Base.metadata,
+    Column('question_id', Integer, ForeignKey('questions.id')),
+    Column('tag_id', String, ForeignKey('tags.label'))
+)
 
 
 class Question(LogEntity):
@@ -17,7 +26,7 @@ class Question(LogEntity):
     body = Column(String, nullable=False)
 
     answers = relationship('Answer', cascade='all, delete-orphan')
-    tags = relationship('Tag')
+    tags = relationship('Tag', secondary=association_table, backref='questions')
 
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     user = relationship('User', backref='questions')

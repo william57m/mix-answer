@@ -66,6 +66,17 @@ class QuestionByIdHandler(BaseRequestHandler):
             obj_id = self.path_kwargs['question_id']
             self.object = self.get_object_by_id(Question, obj_id)
 
+    async def get(self, question_id):
+
+        # Get answers
+        question = self.object.to_dict()
+        answers = [answer.to_dict() for answer in self.object.answers]
+
+        # Returns response
+        self.set_status(200)
+        self.write({'question': question, 'answers': answers})
+        self.finish()
+
     @AuthenticationService.requires_login
     @AuthenticationService.requires_ownership
     async def put(self, question_id):

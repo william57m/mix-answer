@@ -10,10 +10,12 @@ class AnswerStore {
 
     loadAll(questionId) {
         this.isLoaded = false;
-        $.get(URL.answers.replace(':questionId', questionId)).then(result => {
+        var promise = $.get(URL.answers.replace(':questionId', questionId));
+        promise.then(result => {
             this.answers = result.data;
             this.isLoaded = true;
         });
+        return promise;
     }
 }
 

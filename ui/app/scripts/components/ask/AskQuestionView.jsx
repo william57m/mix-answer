@@ -6,20 +6,20 @@ import { WithContext as ReactTags } from 'react-tag-input';
 // App imports
 import EditorText from '../common/EditorText';
 import QuestionStore from '../../stores/question';
+import RouteService from '../../services/RouteService';
 
 
 class TagInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tags: [{ id: 1, text: 'Thailand' }, { id: 2, text: 'India' }],
+            tags: [],
             suggestions: ['USA', 'Germany', 'Austria', 'Costa Rica', 'Sri Lanka', 'Thailand']
         };
 
         // Bind functions
         this.handleDelete = this.handleDelete.bind(this);
         this.handleAddition = this.handleAddition.bind(this);
-        this.handleDrag = this.handleDrag.bind(this);
     }
     handleDelete(i) {
         let tags = this.state.tags;
@@ -33,16 +33,6 @@ class TagInput extends React.Component {
             text: tag
         });
         this.setState({tags: tags});
-    }
-    handleDrag(tag, currPos, newPos) {
-        let tags = this.state.tags;
-
-        // mutate array
-        tags.splice(currPos, 1);
-        tags.splice(newPos, 0, tag);
-
-        // re-render
-        this.setState({ tags: tags });
     }
     render() {
         return (
@@ -59,8 +49,7 @@ class TagInput extends React.Component {
                 tags={this.state.tags}
                 suggestions={this.state.suggestions}
                 handleDelete={this.handleDelete}
-                handleAddition={this.handleAddition}
-                handleDrag={this.handleDrag} />
+                handleAddition={this.handleAddition} />
         );
     }
 }
@@ -87,7 +76,9 @@ class AskQuestionView extends React.Component {
     postQuestion() {
         var title = this.state.title;
         var body = this.state.body;
-        QuestionStore.create(title, body);
+        QuestionStore.create(title, body).then((result) => {
+            RouteService.goTo(`/question/${result.data.id}`);
+        });
     }
     render() {
         return (

@@ -6,14 +6,24 @@ import URL from './_url';
 
 class QuestionStore {
     @observable questions = [];
+    @observable currentQuestion = undefined;
     @observable isLoaded = false;
 
     loadAll() {
         this.isLoaded = false;
-        $.get(URL.questions).then(result => {
+        var promise = $.get(URL.questions);
+        promise.then(result => {
             this.questions = result.data;
             this.isLoaded = true;
         });
+        return promise;
+    }
+    load(id) {
+        var promise = $.get(URL.question.replace(':questionId', id));
+        promise.then(result => {
+            this.currentQuestion = result;
+        });
+        return promise;
     }
     get(id) {
         var question = null;
@@ -30,14 +40,16 @@ class QuestionStore {
             body: body,
             tags: tags
         };
-        return $.ajax({
+        var promise = $.ajax({
             method: 'POST',
             url: URL.questions,
             dataType: 'json',
             data: JSON.stringify(data)
-        }).then(result => {
-            this.questions.push(result);
         });
+        promise.then(result => {
+            this.questions.push(result.data);
+        });
+        return promise;
     }
 }
 

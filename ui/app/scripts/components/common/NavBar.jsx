@@ -22,7 +22,7 @@ class NavBar extends React.Component {
             <div className="answer-header">
                 <div className="header-wrapper">
                     <div className="header-logo" onClick={() => RouteService.goTo('/questions')}>
-                        <img className="header-img" src="/resources/images/mix-logo.png"/>
+                        <img className="header-img" src="/resources/images/mix-logo-black.png"/>
                         <div className="header-title">answer</div>
                     </div>
                     <div className="header-input">
@@ -31,10 +31,10 @@ class NavBar extends React.Component {
                     <ul className="header-buttons-container header-buttons-container-right">
                         <li onClick={() => RouteService.goTo('/question/ask')}><a>Ask a Question</a></li>
                         {user ?
-                            <li><a><i className="fa fa-user"/> {user.firstname}</a></li> : null
+                            <li><a><i className="fa fa-user"/></a></li> : null
                         }
                         {user ?
-                            <li onClick={this.logout}><a><i className="fa fa-lock" /> Logout</a></li> :
+                            <li onClick={this.logout}><a><i className="fa fa-lock" /></a></li> :
                             <li onClick={() => RouteService.goTo('/login')}><a><i className="fa fa-lock" /> Log in</a></li>
                         }
                     </ul>

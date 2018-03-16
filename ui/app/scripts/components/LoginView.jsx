@@ -99,7 +99,7 @@ class LoginPage extends React.Component {
                         </div> : null
                     }
                     <div className="login-actions">
-                        <button className="btn btn-default" onClick={this.login} disabled={this.state.isDisabledButton || this.state.isLoggingIn} isLoading={this.state.isLoggingIn}>Log In</button>
+                        <button className="btn btn-default" onClick={this.login} disabled={this.state.isDisabledButton || this.state.isLoggingIn}>Log In</button>
                     </div>
                 </div>
             </div>

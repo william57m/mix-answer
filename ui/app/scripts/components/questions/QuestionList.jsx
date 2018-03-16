@@ -23,7 +23,7 @@ class ItemDescription extends React.Component {
     render() {
         const tags = this.props.question.tags.map(tag => {
             return (
-                <li>{tag}</li>
+                <li key={tag}>{tag}</li>
             );
         });
         return (

@@ -1,8 +1,10 @@
+$heightNavbar: 60px;
+
 .answer-header {
-    height: 50px;
+    height: $heightNavbar;
     padding: 0 100px;
     border-bottom: 1px solid lightgrey;
-    background-color: white;
+    background-color: #24292e;
     overflow: hidden;
 
     .header-wrapper {
@@ -16,32 +18,34 @@
 
         .header-img {
             float: left;
-            height: 34px;
-            margin-top: 8px;
+            height: 36px;
+            margin-top: 12px;
         }
         .header-title {
             float: left;
-            height: 50px;
-            line-height: 50px;
-            font-size: 22px;
-            color: #606060;
+            height: $heightNavbar;
+            line-height: $heightNavbar;
+            font-size: 24px;
+            color: white;
             margin: 0px 10px;
         }
     }
 
     .header-input {
-        height: 50px;
+        height: $heightNavbar;
         float: left;
-        margin-left: 50px;
+        margin-left: 165px; // 300 - 133
         input {
-            height: 50px;
-            width: 300px;
+            height: $heightNavbar;
+            width: 400px;
             border: 1px solid #E0E0E0;
             border-top: 0px;
             border-bottom: 0px;
             padding-left: 10px;
             box-shadow: none !important;
             outline: none !important;
+            background: #373d46;
+            color: white;
         }
     }
 
@@ -52,21 +56,16 @@
         li {
             cursor: pointer;
             display: inline-block;
-            padding: 15px;
+            padding: 20px;
             &:first-child {
                 margin-left: 10px;
             }
-            &.active {
-                background: #f2f2f2;
-                border-top: 2px solid $primary-color;
-            }
             a {
                 text-decoration: none;
-                color: #535a60;
+                color: white;
             }
             &:hover {
-                background: #f2f2f2;
-                border-top: 2px solid $primary-color;
+                background: #505050;
             }
         }
 

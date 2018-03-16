@@ -23,7 +23,7 @@ class Answer extends React.Component {
             user = this.props.question.user.firstname + ' ' + this.props.question.user.lastname;
             tags = this.props.question.tags.map(tag => {
                 return (
-                    <li>{tag}</li>
+                    <li key={tag}>{tag}</li>
                 );
             });
         } else {
@@ -120,17 +120,20 @@ class QuestionView extends React.Component {
         };
     }
     componentDidMount() {
-        QuestionStore.loadAll();
-        AnswerStore.loadAll(this.state.questionId);
+        QuestionStore.load(this.state.questionId);
     }
     render() {
         var canReply = SessionStore.user ? true : false;
-        var question = QuestionStore.get(this.state.questionId);
+        var currentQuestion = QuestionStore.currentQuestion;
         return (
             <div className="question-view">
                 <div className="question-content-container">
-                    {question ? <Question question={question} /> : null}
-                    <Answers answers={AnswerStore.answers} />
+                    {currentQuestion ?
+                        <React.Fragment>
+                            <Question question={currentQuestion.question} />
+                            <Answers answers={currentQuestion.answers} />
+                        </React.Fragment> : null
+                    }
                     {canReply ?
                         <Reply /> : null
                     }

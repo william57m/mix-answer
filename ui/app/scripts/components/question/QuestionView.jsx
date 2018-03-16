@@ -10,22 +10,17 @@ import EditorText from '../common/EditorText';
 import QuestionStore from '../../stores/question';
 import CONSTANTS from '../../services/constants';
 import SessionStore from '../../stores/session';
+import TagRow from '../common/TagRow';
 
 
 class Answer extends React.Component {
     render() {
-        const { type } = this.props;
-        var tags;
+        const type = this.props.type;
         var user;
         var date;
         if (type === 'question') {
             date = moment(this.props.question.created_at).format(CONSTANTS.DATETIME_FORMAT);
             user = this.props.question.user.firstname + ' ' + this.props.question.user.lastname;
-            tags = this.props.question.tags.map(tag => {
-                return (
-                    <li key={tag}>{tag}</li>
-                );
-            });
         } else {
             date = moment(this.props.answer.created_at).format(CONSTANTS.DATETIME_FORMAT);
             user = this.props.answer.user.firstname + ' ' + this.props.answer.user.lastname;
@@ -43,11 +38,7 @@ class Answer extends React.Component {
                         <div dangerouslySetInnerHTML={{__html: this.props.answer.message}} />
                     }
                     {type === 'question' ?
-                        <div className="description-tags">
-                            <ul>
-                                {tags}
-                            </ul>
-                        </div> : null
+                        <TagRow tags={this.props.question.tags} /> : null
                     }
                     <div>
                         <span className="description-footer">

@@ -9,26 +9,49 @@ import App from './components/App';
 import AskQuestionView from './components/ask/AskQuestionView';
 import QuestionView from './components/question/QuestionView';
 import QuestionsViews from './components/questions/QuestionsView';
+import ProfileView from './components/profile/ProfileView';
 import LoginView from './components/LoginView';
+
+// Store
+import SessionStore from './stores/session';
 
 
 class ParentRoute extends React.Component {
-    // In the future, add login logic here
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLogged: false,
+            initialized: false
+        };
+    }
+    componentDidMount() {
+        // Init state
+        this.checkLogin();
+    }
+    componentWillReceiveProps() {
+        // When location change check user
+        this.checkLogin();
+    }
+    checkLogin() {
+        SessionStore.isAuthenticated().then(() => {
+            this.setState({isLogged: true, initialized: true});
+        }, () => {
+            this.setState({isLogged: false, initialized: true});
+        });
+    }
     render() {
-        return <Route {...this.props} />;
+        var displayRoute = this.props.private ? this.state.isLogged : !this.state.isLogged;
+        var redirect = this.props.private ? '/login' : '/';
+        return (
+            this.state.initialized ?
+                (displayRoute ?
+                    <Route {...this.props} /> :
+                    <Redirect to={redirect} />
+                ) :
+                <span />
+        );
     }
 }
-
-const PrivateAppRoutes = () => (
-    <App>
-        <Switch>
-            <Route path="/questions" component={QuestionsViews} />
-            <Route path="/question/ask" component={AskQuestionView} />
-            <Route path="/question/:id" component={QuestionView} />
-            <Redirect to={'/questions'} />
-        </Switch>
-    </App>
-);
 
 class MainComponent extends React.Component {
     render() {
@@ -36,9 +59,10 @@ class MainComponent extends React.Component {
             <HashRouter>
                 <App>
                     <Switch>
-                        <Route path="/login" component={LoginView} />
+                        <ParentRoute path="/login" component={LoginView} />
                         <Route path="/questions" component={QuestionsViews} />
-                        <Route path="/question/ask" component={AskQuestionView} />
+                        <ParentRoute private path="/question/ask" component={AskQuestionView} />
+                        <ParentRoute private path="/profile" component={ProfileView} />
                         <Route path="/question/:id" component={QuestionView} />
                         <Redirect to={'/questions'} />
                     </Switch>

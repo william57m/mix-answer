@@ -15,6 +15,7 @@ class NavBar extends React.Component {
     }
     logout() {
         SessionStore.logout();
+        RouteService.goTo('/questions');
     }
     render() {
         var user = SessionStore.user;
@@ -31,7 +32,7 @@ class NavBar extends React.Component {
                     <ul className="header-buttons-container header-buttons-container-right">
                         <li onClick={() => RouteService.goTo('/question/ask')}><a>Ask a Question</a></li>
                         {user ?
-                            <li><a><i className="fa fa-user"/></a></li> : null
+                            <li onClick={() => RouteService.goTo('/profile')}><a><i className="fa fa-user"/></a></li> : null
                         }
                         {user ?
                             <li onClick={this.logout}><a><i className="fa fa-lock" /></a></li> :

@@ -16,6 +16,10 @@ class SessionStore {
         });
     }
 
+    isAuthenticated() {
+        return $.get(URL.authenticated);
+    }
+
     login(email, password) {
         this.isLoaded = false;
         return $.ajax({
@@ -25,6 +29,8 @@ class SessionStore {
             data: JSON.stringify({email: email, password: password})
         }).then(result => {
             this.user = result;
+            this.isLoaded = true;
+        }, () => {
             this.isLoaded = true;
         });
     }

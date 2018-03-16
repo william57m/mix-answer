@@ -6,6 +6,7 @@ import React from 'react';
 import CONSTANTS from '../../services/constants';
 import QuestionStore from '../../stores/question';
 import RouteService from '../../services/RouteService';
+import TagRow from '../common/TagRow';
 
 
 class ItemStat extends React.Component {
@@ -21,19 +22,12 @@ class ItemStat extends React.Component {
 
 class ItemDescription extends React.Component {
     render() {
-        const tags = this.props.question.tags.map(tag => {
-            return (
-                <li key={tag}>{tag}</li>
-            );
-        });
         return (
             <span className="description">
-                <div onClick={() => RouteService.goTo(`/question/${this.props.question.id}`)} className="description-title">{this.props.question.title}</div>
-                <div className="description-tags">
-                    <ul>
-                        {tags}
-                    </ul>
+                <div className="description-title" onClick={() => RouteService.goTo(`/question/${this.props.question.id}`)}>
+                    {this.props.question.title}
                 </div>
+                <TagRow tags={this.props.question.tags} />
                 <div>
                     <span className="description-footer">
                         modified {moment(this.props.question.created_at).format(CONSTANTS.DATETIME_FORMAT)} <span className="description-user">{this.props.question.user.firstname + ' ' + this.props.question.user.lastname}</span>

@@ -1,5 +1,6 @@
 // Lib imports
 import React from 'react';
+import { observer } from 'mobx-react';
 import { Col, Row, Button } from 'react-bootstrap';
 import { WithContext as ReactTags } from 'react-tag-input';
 
@@ -7,6 +8,7 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import EditorText from '../common/EditorText';
 import QuestionStore from '../../stores/question';
 import RouteService from '../../services/RouteService';
+import SessionStore from '../../stores/session';
 
 
 class TagInput extends React.Component {
@@ -36,7 +38,8 @@ class TagInput extends React.Component {
     }
     render() {
         return (
-            <ReactTags classNames={{
+            <ReactTags
+                classNames={{
                     tags: 'tags',
                     tagInput: 'tag-input',
                     tagInputField: 'tag-input-field',
@@ -54,6 +57,7 @@ class TagInput extends React.Component {
     }
 }
 
+@observer
 class AskQuestionView extends React.Component {
     constructor(props) {
         super(props);
@@ -64,6 +68,11 @@ class AskQuestionView extends React.Component {
         this.onBodyChange = this.onBodyChange.bind(this);
         this.onTitleChange = this.onTitleChange.bind(this);
         this.postQuestion = this.postQuestion.bind(this);
+    }
+    componentDidMount() {
+        if (SessionStore.isLoaded && !SessionStore.user) {
+            RouteService.goTo('/login');
+        }
     }
 
     // On change handlers

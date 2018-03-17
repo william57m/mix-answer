@@ -1,5 +1,6 @@
 export default URL = {
     // Questions
+    answer: 'api/answers/:answerId',
     answers: 'api/questions/:questionId/answers',
     question: 'api/questions/:questionId',
     questions: 'api/questions',

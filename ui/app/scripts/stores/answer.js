@@ -17,6 +17,28 @@ class AnswerStore {
         });
         return promise;
     }
+    create(questionId, message) {
+        var data = {
+            message: message
+        };
+        var promise = $.ajax({
+            method: 'POST',
+            url: URL.answers.replace(':questionId', questionId),
+            dataType: 'json',
+            data: JSON.stringify(data)
+        });
+        promise.then(result => {
+            this.answers.push(result.data);
+        });
+        return promise;
+    }
+    delete(id) {
+        var promise = $.ajax({
+            method: 'DELETE',
+            url: URL.answer.replace(':answerId', id)
+        });
+        return promise;
+    }
 }
 
 export default new AnswerStore();

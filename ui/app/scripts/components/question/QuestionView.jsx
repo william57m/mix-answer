@@ -5,22 +5,42 @@ import moment from 'moment';
 import React from 'react';
 
 // App imports
+import CONSTANTS from '../../services/constants';
 import EditorText from '../common/EditorText';
 import QuestionStore from '../../stores/question';
-import CONSTANTS from '../../services/constants';
+import RouteService from '../../services/RouteService';
 import SessionStore from '../../stores/session';
 import TagRow from '../common/TagRow';
 
 
 class Answer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.delete = this.delete.bind(this);
+    }
+    delete() {
+        if (this.props.type === 'question') {
+            QuestionStore.delete(this.props.question.id).then(() => {
+                RouteService.goTo('/questions');
+            });
+        } else {
+
+        }
+    }
     render() {
+        var canEdit;
+        var canDelete;
         const type = this.props.type;
         var user;
         var date;
         if (type === 'question') {
+            canEdit = SessionStore.user && SessionStore.user.id === this.props.question.creator_id;
+            canDelete = SessionStore.user && SessionStore.user.id === this.props.question.creator_id;
             date = moment(this.props.question.created_at).format(CONSTANTS.DATETIME_FORMAT);
             user = this.props.question.user.firstname + ' ' + this.props.question.user.lastname;
         } else {
+            canEdit = SessionStore.user && SessionStore.user.id === this.props.answer.creator_id;
+            canDelete = SessionStore.user && SessionStore.user.id === this.props.answer.creator_id;
             date = moment(this.props.answer.created_at).format(CONSTANTS.DATETIME_FORMAT);
             user = this.props.answer.user.firstname + ' ' + this.props.answer.user.lastname;
         }
@@ -45,7 +65,12 @@ class Answer extends React.Component {
                         </span>
                     </div>
                     <div>
-                        <span className="user-action">edit</span>
+                        {canEdit ?
+                            <span className="user-action">edit</span> : null
+                        }
+                        {canDelete ?
+                            <span className="user-action" onClick={this.delete}>delete</span> : null
+                        }
                     </div>
                 </div>
             </div>
@@ -73,22 +98,11 @@ class Answers extends React.Component {
 }
 
 class Question extends React.Component {
-    constructor(props) {
-        super(props);
-        this.delete = this.delete.bind(this);
-    }
-    delete() {
-        QuestionStore.delete(this.props.question.id);
-    }
     render() {
-        var canDelete = SessionStore.user && SessionStore.user.id === this.props.question.creator_id;
         return (
             <React.Fragment>
                 <div className="question-title">
                     {this.props.question.title}
-                    {canDelete ?
-                        <i onClick={this.delete} className="fa fa-trash" /> : null
-                    }
                 </div>
                 <Answer type="question" question={this.props.question} />
             </React.Fragment>

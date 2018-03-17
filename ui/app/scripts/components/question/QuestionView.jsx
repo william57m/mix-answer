@@ -5,7 +5,6 @@ import moment from 'moment';
 import React from 'react';
 
 // App imports
-import AnswerStore from '../../stores/answer';
 import EditorText from '../common/EditorText';
 import QuestionStore from '../../stores/question';
 import CONSTANTS from '../../services/constants';
@@ -74,11 +73,22 @@ class Answers extends React.Component {
 }
 
 class Question extends React.Component {
+    constructor(props) {
+        super(props);
+        this.delete = this.delete.bind(this);
+    }
+    delete() {
+        QuestionStore.delete(this.props.question.id);
+    }
     render() {
+        var canDelete = SessionStore.user && SessionStore.user.id === this.props.question.creator_id;
         return (
             <React.Fragment>
                 <div className="question-title">
                     {this.props.question.title}
+                    {canDelete ?
+                        <i onClick={this.delete} className="fa fa-trash" /> : null
+                    }
                 </div>
                 <Answer type="question" question={this.props.question} />
             </React.Fragment>

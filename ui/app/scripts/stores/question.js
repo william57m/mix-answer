@@ -51,6 +51,18 @@ class QuestionStore {
         });
         return promise;
     }
+    delete(id) {
+        var promise = $.ajax({
+            method: 'DELETE',
+            url: URL.question.replace(':questionId', id)
+        });
+        promise.then(() => {
+            var question = this.get(id);
+            var indexQuestion = this.questions.indexOf(question);
+            this.questions.splice(indexQuestion, 1);
+        });
+        return promise;
+    }
 }
 
 export default new QuestionStore();

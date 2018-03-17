@@ -18,6 +18,7 @@ class BaseRequestHandler(RequestHandler):
     def prepare(self):
         super().prepare()
         self.application.session_store.get(self)
+        self.add_listener()
 
     def add_listener(self):
         """ Add listener to SQLAlchemy session """
@@ -35,7 +36,7 @@ class BaseRequestHandler(RequestHandler):
                         new_object.creator_id = user_id
 
         # Register listener
-        listen(self.application.db.session, 'before_flush', affect_creator)
+        listen(self.application.db, 'before_flush', affect_creator)
 
     def get_object_by_id(self, model, obj_id):
         try:

@@ -63,6 +63,9 @@ class QuestionStore {
         });
         return promise;
     }
+    refreshCurrent() {
+        this.load(this.currentQuestion.question.id);
+    }
 }
 
 export default new QuestionStore();

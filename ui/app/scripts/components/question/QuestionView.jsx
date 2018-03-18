@@ -24,7 +24,9 @@ class Answer extends React.Component {
                 RouteService.goTo('/questions');
             });
         } else {
-            AnswerStore.delete(this.props.answer.id);
+            AnswerStore.delete(this.props.answer.id).then(() => {
+                QuestionStore.refreshCurrent();
+            });
         }
     }
     render() {
@@ -118,7 +120,9 @@ class Reply extends React.Component {
     postAnswer() {
         var questionId = this.props.question.id;
         var message = this.refs.inputAnswer.state.text;
-        AnswerStore.create(questionId, message);
+        AnswerStore.create(questionId, message).then(() => {
+            QuestionStore.refreshCurrent();
+        });
     }
     render() {
         return (
@@ -158,7 +162,7 @@ class QuestionView extends React.Component {
                             <Answers answers={currentQuestion.answers} />
                         </React.Fragment> : null
                     }
-                    {canReply ?
+                    {currentQuestion && canReply ?
                         <Reply question={currentQuestion.question} /> : null
                     }
                 </div>

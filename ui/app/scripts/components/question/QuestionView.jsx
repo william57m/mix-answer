@@ -1,10 +1,10 @@
 // Lib imports
-import { Button } from 'react-bootstrap';
 import { observer } from 'mobx-react';
 import moment from 'moment';
 import React from 'react';
 
 // App imports
+import AnswerStore from '../../stores/answer';
 import CONSTANTS from '../../services/constants';
 import EditorText from '../common/EditorText';
 import QuestionStore from '../../stores/question';
@@ -24,7 +24,7 @@ class Answer extends React.Component {
                 RouteService.goTo('/questions');
             });
         } else {
-
+            AnswerStore.delete(this.props.answer.id);
         }
     }
     render() {
@@ -111,15 +111,24 @@ class Question extends React.Component {
 }
 
 class Reply extends React.Component {
+    constructor(props) {
+        super(props);
+        this.postAnswer = this.postAnswer.bind(this);
+    }
+    postAnswer() {
+        var questionId = this.props.question.id;
+        var message = this.refs.inputAnswer.state.text;
+        AnswerStore.create(questionId, message);
+    }
     render() {
         return (
             <React.Fragment>
                 <div className="separator your-reply">
                     Your Answer
                 </div>
-                <EditorText />
+                <EditorText ref="inputAnswer" />
                 <div className="post-button">
-                    <Button bsStyle="primary">Post Your Answer</Button>
+                    <button className="btn btn-primary" onClick={this.postAnswer}>Post Your Answer</button>
                 </div>
             </React.Fragment>
         );
@@ -150,7 +159,7 @@ class QuestionView extends React.Component {
                         </React.Fragment> : null
                     }
                     {canReply ?
-                        <Reply /> : null
+                        <Reply question={currentQuestion.question} /> : null
                     }
                 </div>
             </div>

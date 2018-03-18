@@ -140,14 +140,25 @@ def filter_query(request, query, model_class, authorized_fields=None, metadata=N
     return query
 
 
-def check_param(data, name, type, required):
+def check_param(data, name, type_param, required):
     if name not in data:
         if required:
             raise BadRequestError(f'Param {name} is missing')
         else:
             return None
 
-    return data[name]
+    param = data[name]
+
+    if type_param == 'integer':
+        try:
+            param = int(param)
+        except ValueError:
+            raise BadRequestError(f'Param {name} must be an integer')
+    elif type_param == 'list':
+        if type(param) is not list:
+            raise BadRequestError(f'Param {name} must be an array')
+
+    return param
 
 
 def update_by_property_list(property_list, request_data, object_to_update):

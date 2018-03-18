@@ -13,7 +13,7 @@ from core.db.models import LogEntity
 association_table = Table(
     'question__tag', Base.metadata,
     Column('question_id', Integer, ForeignKey('questions.id')),
-    Column('tag_id', String, ForeignKey('tags.label'))
+    Column('tag_id', String, ForeignKey('tags.label', ondelete="CASCADE"))
 )
 
 

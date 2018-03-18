@@ -54,7 +54,7 @@ class BaseRequestHandler(RequestHandler):
             self.write(e.payload)
             self.finish()
         elif isinstance(e, SQLAlchemyError):
-            self.db.rollback()
+            self.application.db.rollback()
             super()._handle_request_exception(e)
         else:
             super()._handle_request_exception(e)
@@ -74,5 +74,5 @@ class BaseRequestHandler(RequestHandler):
             user_id = self.session.user_id
             # If the user exists..
             if user_id is not None:
-                return self.application.db.query(User).filter_by(id=user_id).one()
+                return self.application.db.query(User).filter_by(id=user_id).first()
         return None

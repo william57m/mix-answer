@@ -47,7 +47,7 @@ class AnswerHandler(BaseRequestHandler):
 
         # Create data
         data = json.loads(self.request.body.decode('utf-8'))
-        message = check_param(data, name='message', type='string', required=True)
+        message = check_param(data, name='message', type_param='string', required=True)
         answer = Answer(message=message, question_id=question_id, user=self.user)
 
         # Commit in DB

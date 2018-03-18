@@ -4,7 +4,9 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from core.api import BaseRequestHandler
 from core.db.models import Question
+from core.db.models import Tag
 from core.services.authentication import AuthenticationService
+from core.utils.exceptions import BadRequestError
 from core.utils.exceptions import InternalServerError
 from core.utils.query import check_param
 from core.utils.query import extract_metadata
@@ -40,13 +42,26 @@ class QuestionHandler(BaseRequestHandler):
 
         # Create data
         data = json.loads(self.request.body.decode('utf-8'))
-        title = check_param(data, name='title', type='string', required=True)
-        body = check_param(data, name='body', type='string', required=True)
-        question = Question(title=title, body=body, user=self.user)
+        title = check_param(data, name='title', type_param='string', required=True)
+        body = check_param(data, name='body', type_param='string', required=True)
+        tags = check_param(data, name='tags', type_param='list', required=True)
+        if len(tags) < 1:
+            raise BadRequestError('At least one tag is required')
+
+        # Add tag
+        tags_to_add = []
+        for tag_str in tags:
+            tag = self.application.db.query(Tag).filter_by(label=tag_str).first()
+            if tag is None:
+                tag = Tag(label=tag_str)
+                self.application.db.add(tag)
+            tags_to_add.append(tag)
+
+        question = Question(title=title, body=body, user=self.user, tags=tags_to_add)
+        self.application.db.add(question)
 
         # Commit in DB
         try:
-            self.application.db.add(question)
             self.application.db.commit()
         except SQLAlchemyError as error:
             self.application.db.rollback()

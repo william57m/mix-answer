@@ -31,10 +31,12 @@ class TagInput extends React.Component {
     handleAddition(tag) {
         let tags = this.state.tags;
         tags.push({
-            id: tags.length + 1,
             text: tag
         });
         this.setState({tags: tags});
+    }
+    getTags() {
+        return this.state.tags.map(tag => tag.text);
     }
     render() {
         return (
@@ -85,7 +87,8 @@ class AskQuestionView extends React.Component {
     postQuestion() {
         var title = this.state.title;
         var body = this.state.body;
-        QuestionStore.create(title, body).then((result) => {
+        var tags = this.refs.inputTag.getTags();
+        QuestionStore.create(title, body, tags).then((result) => {
             RouteService.goTo(`/question/${result.data.id}`);
         });
     }
@@ -105,7 +108,7 @@ class AskQuestionView extends React.Component {
                 </Row>
                 <Row>
                     <Col className="question-ask-tag">
-                        <TagInput />
+                        <TagInput ref="inputTag" />
                     </Col>
                 </Row>
                 <Row>

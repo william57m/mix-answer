@@ -1,7 +1,6 @@
 // Lib imports
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Col, Row, Button } from 'react-bootstrap';
 import { WithContext as ReactTags } from 'react-tag-input';
 
 // App imports
@@ -95,27 +94,19 @@ class AskQuestionView extends React.Component {
     render() {
         return (
             <div className="question-ask-container">
-                <Row>
-                    <Col className="question-ask-title">
-                        <span className="question-ask-label">Title</span>
-                        <input ref="inputTitle" value={this.state.title} onChange={this.onTitleChange} placeholder="What is your question? Please be specific."/>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col className="question-ask-body">
-                        <EditorText onChange={this.onBodyChange} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col className="question-ask-tag">
-                        <TagInput ref="inputTag" />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col className="question-ask-tag">
-                        <Button bsStyle="primary" onClick={this.postQuestion}>Post Your Question</Button>
-                    </Col>
-                </Row>
+                <div className="question-ask-title">
+                    <span className="question-ask-label">Title</span>
+                    <input ref="inputTitle" value={this.state.title} onChange={this.onTitleChange} placeholder="What is your question? Please be specific."/>
+                </div>
+                <div className="question-ask-body">
+                    <EditorText onChange={this.onBodyChange} />
+                </div>
+                <div className="question-ask-tag">
+                    <TagInput ref="inputTag" />
+                </div>
+                <div className="question-ask-tag">
+                    <button className="btn btn-primary" onClick={this.postQuestion}>Post Your Question</button>
+                </div>
             </div>
         );
     }

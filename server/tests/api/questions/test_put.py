@@ -1,6 +1,7 @@
 import json
 
 from core.db.models import Question
+from core.db.models import Tag
 from core.db.models import User
 
 from tests.base import AuthAppTestCase
@@ -11,7 +12,8 @@ URI = '/questions/{id}'
 def get_valid_data():
     return {
         'title': 'Title',
-        'body': 'Body'
+        'body': 'Body',
+        'tags': ['JavaScript', 'ReactJS']
     }
 
 
@@ -34,11 +36,14 @@ class TestWithValidParams(AuthAppTestCase):
         super().setUp()
         u1 = User(firstname="Fernando", lastname="Alonso", email="fernando.alonso@mclaren.com")
         self.q1 = Question(title="What is the fatest car?", body="Which team should I chose to win the F1 world championship?", user=u1, creator_id=self.request_user.id)
+        tag = Tag(label='JavaScript')
         self.db.add(u1)
+        self.db.add(tag)
         self.db.add(self.q1)
         self.db.commit()
 
     def tearDown(self):
+        self.db.query(Tag).delete()
         self.db.query(Question).delete()
         self.db.query(User).delete()
         self.db.commit()

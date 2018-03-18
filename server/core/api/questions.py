@@ -100,6 +100,24 @@ class QuestionByIdHandler(BaseRequestHandler):
         data = json.loads(self.request.body.decode('utf-8'))
         update_by_property_list(['title', 'body'], data, self.object)
 
+        # Update tags
+        if 'tags' in data:
+            tags = check_param(data, name='tags', type_param='list', required=True)
+            if len(tags) < 1:
+                raise BadRequestError('At least one tag is required')
+
+            # Add tag
+            tags_to_add = []
+            for tag_str in tags:
+                tag = self.application.db.query(Tag).filter_by(label=tag_str).first()
+                if tag is None:
+                    tag = Tag(label=tag_str)
+                    self.application.db.add(tag)
+                tags_to_add.append(tag)
+
+            # Update property in question
+            self.object.tags = tags_to_add
+
         # Commit in DB
         try:
             self.application.db.commit()

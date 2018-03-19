@@ -15,6 +15,6 @@ before_install:
 jobs:
   include:
     - stage: build_ui
-      script: ./scripts/build_ui.sh
+      script: sh ./scripts/build_ui.sh
     - stage: build_server
-      script: ./scripts/build_server.sh
+      script: sh ./scripts/build_server.sh

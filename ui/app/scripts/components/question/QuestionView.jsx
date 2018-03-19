@@ -167,12 +167,12 @@ class QuestionView extends React.Component {
                 <div className="question-content-container">
                     {currentQuestion ?
                         <React.Fragment>
-                            <Question question={currentQuestion.question} />
+                            <Question question={currentQuestion} />
                             <Answers answers={answers} />
                         </React.Fragment> : null
                     }
                     {currentQuestion && canReply ?
-                        <Reply question={currentQuestion.question} /> : null
+                        <Reply question={currentQuestion} /> : null
                     }
                 </div>
             </div>

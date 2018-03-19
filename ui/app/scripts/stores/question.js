@@ -21,7 +21,7 @@ class QuestionStore {
     setCurrent(id) {
         var promise = this._load(id);
         promise.then(result => {
-            this.currentQuestion = result;
+            this.currentQuestion = result.question;
         });
         return promise;
     }
@@ -60,6 +60,12 @@ class QuestionStore {
             'up_down': upDown
         };
         var promise = this._vote(id, data);
+        promise.then(result => {
+            var question = this.get(id);
+            var indexQuestion = this.questions.indexOf(question);
+            this.questions[indexQuestion] = result.data;
+            this.currentQuestion = result.data;
+        });
         return promise;
     }
 

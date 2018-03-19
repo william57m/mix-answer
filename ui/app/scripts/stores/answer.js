@@ -50,6 +50,11 @@ class AnswerStore {
             'up_down': upDown
         };
         var promise = this._vote(id, data);
+        promise.then(result => {
+            var answer = this.get(id);
+            var indexAnswer = this.answers.indexOf(answer);
+            this.answers[indexAnswer] = result.data;
+        });
         return promise;
     }
 

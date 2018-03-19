@@ -86,7 +86,8 @@ class AnswerVoteHandler(VoteHandler):
             raise InternalServerError('Unable to toggle the vote.', error)
 
         # Returns response
-        self.set_status(201)
+        self.write({'data': self.answer.to_dict()})
+        self.set_status(200)
         self.finish()
 
 
@@ -117,5 +118,6 @@ class QuestionVoteHandler(VoteHandler):
             raise InternalServerError('Unable to toggle the vote.', error)
 
         # Returns response
-        self.set_status(201)
+        self.write({'data': self.question.to_dict()})
+        self.set_status(200)
         self.finish()

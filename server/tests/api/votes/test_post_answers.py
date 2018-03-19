@@ -135,7 +135,7 @@ class TestWithValidParams(AuthAppTestCase):
         response = self.fetch(URI.format(id=self.a1.id), method='POST', body=json.dumps(data))
 
         # Check status code
-        self.assertEqual(201, response.code)
+        self.assertEqual(200, response.code)
 
         # Check vote in DB
         vote = self.db.query(VoteAnswer).filter(VoteAnswer.user_id == self.request_user.id) \
@@ -158,7 +158,7 @@ class TestWithValidParams(AuthAppTestCase):
         response = self.fetch(URI.format(id=self.a2.id), method='POST', body=json.dumps(data))
 
         # Check status code
-        self.assertEqual(201, response.code)
+        self.assertEqual(200, response.code)
 
         # Check vote in DB
         vote = self.db.query(VoteAnswer).filter(VoteAnswer.user_id == self.request_user.id) \
@@ -180,7 +180,7 @@ class TestWithValidParams(AuthAppTestCase):
         response = self.fetch(URI.format(id=self.a3.id), method='POST', body=json.dumps(data))
 
         # Check status code
-        self.assertEqual(201, response.code)
+        self.assertEqual(200, response.code)
 
         # Check vote in DB
         vote = self.db.query(VoteAnswer).filter(VoteAnswer.user_id == self.request_user.id) \

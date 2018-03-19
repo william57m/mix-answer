@@ -1,0 +1,23 @@
+FROM        nginx:1.11.1
+
+# Environment variables
+ENV         HOME=/home/webapp
+ENV         CONF_DIR=/etc/nginx/conf.d
+ENV         LOG_DIR=/var/log/nginx
+ENV         STATIC_DIR=/usr/share/nginx/html
+
+# Remove old logs
+RUN         rm $LOG_DIR/access.log $LOG_DIR/error.log
+VOLUME      ["$LOG_DIR"]
+
+# Copy resources and nginx config
+COPY        ./nginx/nginx.conf      $CONF_DIR/default.conf
+COPY        ./ui/app/output         $STATIC_DIR
+
+# Adding docker entrypoint
+ADD         nginx/docker-entrypoint-nginx.sh $HOME/
+USER        root
+RUN         chmod a+x $HOME/docker-entrypoint-nginx.sh
+
+ENTRYPOINT  ["/home/webapp/docker-entrypoint-nginx.sh"]
+CMD         ["nginx", "-g", "daemon off;"]

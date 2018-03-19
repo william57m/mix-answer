@@ -8,6 +8,9 @@ docker-compose.override.yml
 # Mac file
 .DS_Store
 
+# Build files
+ui/app/output
+
 
 ######################
 # Node files         #

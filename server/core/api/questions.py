@@ -87,6 +87,16 @@ class QuestionByIdHandler(BaseRequestHandler):
         question = self.object.to_dict()
         answers = [answer.to_dict() for answer in self.object.answers]
 
+        # Update view counter in DB
+        try:
+            # Increment view counter (Naive way)
+            # TO IMPROVE
+            self.object.view_counter = self.object.view_counter + 1
+            self.application.db.commit()
+        except SQLAlchemyError as error:
+            self.application.db.rollback()
+            raise InternalServerError('Unable to create the question.', error)
+
         # Returns response
         self.set_status(200)
         self.write({'question': question, 'answers': answers})

@@ -24,9 +24,7 @@ class Answer extends React.Component {
                 RouteService.goTo('/questions');
             });
         } else {
-            AnswerStore.delete(this.props.answer.id).then(() => {
-                QuestionStore.refreshCurrent();
-            });
+            AnswerStore.delete(this.props.answer.id);
         }
     }
     render() {
@@ -80,6 +78,7 @@ class Answer extends React.Component {
     }
 }
 
+@observer
 class Answers extends React.Component {
     render() {
         const answers = this.props.answers.map(answer => {
@@ -120,9 +119,7 @@ class Reply extends React.Component {
     postAnswer() {
         var questionId = this.props.question.id;
         var message = this.refs.inputAnswer.state.text;
-        AnswerStore.create(questionId, message).then(() => {
-            QuestionStore.refreshCurrent();
-        });
+        AnswerStore.create(questionId, message);
     }
     render() {
         return (
@@ -148,18 +145,20 @@ class QuestionView extends React.Component {
         };
     }
     componentDidMount() {
-        QuestionStore.load(this.state.questionId);
+        QuestionStore.setCurrent(this.state.questionId);
+        AnswerStore.loadAll(this.state.questionId);
     }
     render() {
         var canReply = SessionStore.user ? true : false;
         var currentQuestion = QuestionStore.currentQuestion;
+        var answers = AnswerStore.answers;
         return (
             <div className="question-view">
                 <div className="question-content-container">
                     {currentQuestion ?
                         <React.Fragment>
                             <Question question={currentQuestion.question} />
-                            <Answers answers={currentQuestion.answers} />
+                            <Answers answers={answers} />
                         </React.Fragment> : null
                     }
                     {currentQuestion && canReply ?

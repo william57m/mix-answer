@@ -11,15 +11,15 @@ class QuestionStore {
 
     loadAll() {
         this.isLoaded = false;
-        var promise = $.get(URL.questions);
+        var promise = this._loadAll();
         promise.then(result => {
             this.questions = result.data;
             this.isLoaded = true;
         });
         return promise;
     }
-    load(id) {
-        var promise = $.get(URL.question.replace(':questionId', id));
+    setCurrent(id) {
+        var promise = this._load(id);
         promise.then(result => {
             this.currentQuestion = result;
         });
@@ -40,22 +40,14 @@ class QuestionStore {
             body: body,
             tags: tags
         };
-        var promise = $.ajax({
-            method: 'POST',
-            url: URL.questions,
-            dataType: 'json',
-            data: JSON.stringify(data)
-        });
+        var promise = this._create(data);
         promise.then(result => {
             this.questions.push(result.data);
         });
         return promise;
     }
     delete(id) {
-        var promise = $.ajax({
-            method: 'DELETE',
-            url: URL.question.replace(':questionId', id)
-        });
+        var promise = this._delete(id);
         promise.then(() => {
             var question = this.get(id);
             var indexQuestion = this.questions.indexOf(question);
@@ -63,8 +55,27 @@ class QuestionStore {
         });
         return promise;
     }
-    refreshCurrent() {
-        this.load(this.currentQuestion.question.id);
+
+    // Ajax requests
+    _loadAll() {
+        return $.get(URL.questions);
+    }
+    _load(id) {
+        return $.get(URL.question.replace(':questionId', id));
+    }
+    _create(data) {
+        return $.ajax({
+            method: 'POST',
+            url: URL.questions,
+            dataType: 'json',
+            data: JSON.stringify(data)
+        });
+    }
+    _delete(id) {
+        return $.ajax({
+            method: 'DELETE',
+            url: URL.question.replace(':questionId', id)
+        });
     }
 }
 

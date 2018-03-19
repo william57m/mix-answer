@@ -39,7 +39,8 @@ class WebServer(Application):
             (r'/questions/(?P<question_id>[0-9]+)/answers/?', answers_handler.AnswerHandler),
             (r'/answers/(?P<answer_id>[0-9]+)', answers_handler.AnswerByIdHandler),
             # Votes
-            (r'/answers/(?P<answer_id>[0-9]+)/votes/?', votes_handler.VoteHandler),
+            (r'/answers/(?P<answer_id>[0-9]+)/votes/?', votes_handler.AnswerVoteHandler),
+            (r'/questions/(?P<question_id>[0-9]+)/votes/?', votes_handler.QuestionVoteHandler),
             # Tags
             (r'/tags/?', tags_handler.TagHandler),
             # Users

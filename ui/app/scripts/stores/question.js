@@ -55,6 +55,13 @@ class QuestionStore {
         });
         return promise;
     }
+    vote(id, upDown) {
+        var data = {
+            'up_down': upDown
+        };
+        var promise = this._vote(id, data);
+        return promise;
+    }
 
     // Ajax requests
     _loadAll() {
@@ -75,6 +82,14 @@ class QuestionStore {
         return $.ajax({
             method: 'DELETE',
             url: URL.question.replace(':questionId', id)
+        });
+    }
+    _vote(id, data) {
+        return $.ajax({
+            method: 'POST',
+            url: URL.voteQuestion.replace(':questionId', id),
+            dataType: 'json',
+            data: JSON.stringify(data)
         });
     }
 }

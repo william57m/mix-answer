@@ -12,7 +12,8 @@ from core.db.models import Base
 from core.db.models import Question
 from core.db.models import Tag
 from core.db.models import User
-from core.db.models import Vote
+from core.db.models import VoteAnswer
+from core.db.models import VoteQuestion
 
 from core.utils.config import parse_config
 
@@ -91,7 +92,7 @@ def add_data_test(db):
     db.add(t5)
 
     # Add answers
-    a1 = Answer(body='Mix Answer has been setup to work with Docker. You just need to install Docker on your machine and follow the instruction, it\'s as easy as that.', user=u2)
+    a1 = Answer(body='Mix Answer has been setup to work with Docker. You just need to install Docker on your machine and follow the instruction, it\'s as easy as that.', user=u2, vote_counter=2)
     a2 = Answer(body='I confirm, just follow the instructions, it\'s so easy.', user=u2)
     a3 = Answer(body='There are a lot of popular frameworks today so it\'s difficult to choose. I can recommend you ReactJS, this is the tool used for Mix Answer', user=u1)
     db.add(a1)
@@ -100,15 +101,23 @@ def add_data_test(db):
     db.flush()
 
     # Add questions
-    db.add(Question(title='How do you setup Mix Answer?', body='I\'m trying to install Mix Answer, what tool do I need?', user_id=u1.id, answers=[a1, a2], tags=[t4, t5]))
-    db.add(Question(title='What is the best front-end technology?', body='I\'d like to create a website but I don\'t know which framework to use', user_id=u1.id, answers=[a3], tags=[t1, t4, t5]))
-    db.add(Question(title='What did you plan for this weekend?', body='What are you planning to do this weekend?', user_id=u2.id, tags=[t3]))
+    q1 = Question(title='How do you setup Mix Answer?', body='I\'m trying to install Mix Answer, what tool do I need?', user_id=u1.id, answers=[a1, a2], tags=[t4, t5], vote_counter=1)
+    q2 = Question(title='What is the best front-end technology?', body='I\'d like to create a website but I don\'t know which framework to use', user_id=u1.id, answers=[a3], tags=[t1, t4, t5], vote_counter=1)
+    q3 = Question(title='What did you plan for this weekend?', body='What are you planning to do this weekend?', user_id=u2.id, tags=[t3])
+    db.add(q1)
+    db.add(q2)
+    db.add(q3)
+    db.flush()
 
     # Add votes
-    v1 = Vote(answer_id=a1.id, user_id=u1.id)
-    v2 = Vote(answer_id=a1.id, user_id=u2.id)
+    v1 = VoteAnswer(answer_id=a1.id, user_id=u1.id)
+    v2 = VoteAnswer(answer_id=a1.id, user_id=u2.id)
+    v3 = VoteQuestion(question_id=q1.id, user_id=u1.id)
+    v4 = VoteQuestion(question_id=q2.id, user_id=u2.id)
     db.add(v1)
     db.add(v2)
+    db.add(v3)
+    db.add(v4)
 
     # Commit data
     db.commit()

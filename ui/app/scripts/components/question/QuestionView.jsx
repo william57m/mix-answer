@@ -18,6 +18,13 @@ class Answer extends React.Component {
         super(props);
         this.delete = this.delete.bind(this);
     }
+    vote(upDown) {
+        if (this.props.type === 'question') {
+            QuestionStore.vote(this.props.question.id, upDown);
+        } else {
+            AnswerStore.vote(this.props.answer.id, upDown);
+        }
+    }
     delete() {
         if (this.props.type === 'question') {
             QuestionStore.delete(this.props.question.id).then(() => {
@@ -33,23 +40,26 @@ class Answer extends React.Component {
         const type = this.props.type;
         var user;
         var date;
+        var vote;
         if (type === 'question') {
             canEdit = SessionStore.user && SessionStore.user.id === this.props.question.creator_id;
             canDelete = SessionStore.user && SessionStore.user.id === this.props.question.creator_id;
             date = moment(this.props.question.created_at).format(CONSTANTS.DATETIME_FORMAT);
             user = this.props.question.user.firstname + ' ' + this.props.question.user.lastname;
+            vote = this.props.question.votes;
         } else {
             canEdit = SessionStore.user && SessionStore.user.id === this.props.answer.creator_id;
             canDelete = SessionStore.user && SessionStore.user.id === this.props.answer.creator_id;
             date = moment(this.props.answer.created_at).format(CONSTANTS.DATETIME_FORMAT);
             user = this.props.answer.user.firstname + ' ' + this.props.answer.user.lastname;
+            vote = this.props.answer.votes;
         }
         return (
             <div className={`content-format ${type === 'question' ? 'question-type' : 'answer-type'}`}>
                 <div className="left-vote">
-                    <div><i className={'fa fa-caret-up'} /></div>
-                    <div>N/A</div>
-                    <div><i className={'fa fa-caret-down'} /></div>
+                    <div><i className={'fa fa-caret-up'} onClick={this.vote.bind(this, true)} /></div>
+                    <div>{vote}</div>
+                    <div><i className={'fa fa-caret-down'} onClick={this.vote.bind(this, false)} /></div>
                 </div>
                 <div className="right-content">
                     {type === 'question' ?

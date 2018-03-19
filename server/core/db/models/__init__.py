@@ -10,7 +10,8 @@ __all__ = [
     'Question',
     'Tag',
     'User',
-    'Vote'
+    'VoteAnswer',
+    'VoteQuestion'
 ]
 
 # Model import to expose in core.db.models
@@ -20,4 +21,5 @@ from core.db.models.answer import Answer
 from core.db.models.question import Question
 from core.db.models.tag import Tag
 from core.db.models.user import User
-from core.db.models.vote import Vote
+from core.db.models.vote import VoteAnswer
+from core.db.models.vote import VoteQuestion

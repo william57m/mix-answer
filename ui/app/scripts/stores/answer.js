@@ -45,6 +45,13 @@ class AnswerStore {
         });
         return promise;
     }
+    vote(id, upDown) {
+        var data = {
+            'up_down': upDown
+        };
+        var promise = this._vote(id, data);
+        return promise;
+    }
 
     // Ajax requests
     _loadAll(questionId) {
@@ -62,6 +69,14 @@ class AnswerStore {
         return $.ajax({
             method: 'DELETE',
             url: URL.answer.replace(':answerId', id)
+        });
+    }
+    _vote(id, data) {
+        return $.ajax({
+            method: 'POST',
+            url: URL.voteAnswer.replace(':answerId', id),
+            dataType: 'json',
+            data: JSON.stringify(data)
         });
     }
 }

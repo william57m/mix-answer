@@ -24,6 +24,6 @@ class Post(LogEntity):
             'id': self.id,
             'body': self.body,
             'votes': self.vote_counter,
-            'view': self.view_counter
+            'views': self.view_counter
         })
         return my_dict

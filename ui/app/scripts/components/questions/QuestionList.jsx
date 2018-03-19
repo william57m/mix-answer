@@ -43,9 +43,9 @@ class QuestionRow extends React.Component {
         return (
             <div className="questions-row">
                 <span className="questions-stats">
-                    <ItemStat count={'N/A'} label={'votes'}/>
+                    <ItemStat count={this.props.question.votes} label={'votes'}/>
                     <ItemStat count={this.props.question.nb_answers} label={'answer'}/>
-                    <ItemStat count={'N/A'} label={'views'}/>
+                    <ItemStat count={this.props.question.views} label={'views'}/>
                 </span>
                 <span className="questions-description">
                     <ItemDescription question={this.props.question} />

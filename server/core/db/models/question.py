@@ -33,6 +33,7 @@ class Question(Post):
         my_dict = Post.to_dict(self)
         my_dict.update({
             'title': self.title,
+            'nb_answers': len(self.answers),
             'tags': [tag.label for tag in self.tags],
             'user': self.user.to_dict()
         })

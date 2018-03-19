@@ -4,13 +4,13 @@ set -e
 CHECKSUM=`cat ui/Dockerfile ui/package.json ui/scripts/webpack.config.prod.js | md5sum | awk '{print $1}'`
 BUILDER_IMAGE=william57m/mix-answer-builder:$CHECKSUM
 docker pull $BUILDER_IMAGE || { 
-    docker build -f Dockerfile-base -t $BUILDER_IMAGE ui
+    docker build -t $BUILDER_IMAGE -f ui/Dockerfile ui
     docker push $BUILDER_IMAGE;
 }
 
 # Compile files
 docker run --rm \
-           -v $PWD/app:/home/webapp/app \
+           -v $PWD/ui/app:/home/webapp/app \
            $BUILDER_IMAGE \
            npm run build
 

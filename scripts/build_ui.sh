@@ -9,6 +9,7 @@ docker pull $BUILDER_IMAGE || {
 }
 
 # Compile files
+chmod a+w $PWD/ui/app
 docker run --rm \
            -v $PWD/ui/app:/home/webapp/app \
            $BUILDER_IMAGE \

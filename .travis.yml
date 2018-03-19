@@ -20,7 +20,6 @@ jobs:
         - BUILDER_IMAGE=william57m/mix-answer-builder:$CHECKSUM
         - docker pull $BUILDER_IMAGE || { docker build -f Dockerfile-base -t $BUILDER_IMAGE ui; docker push $BUILDER_IMAGE; }
         - docker run --rm -v $PWD/app:/home/webapp/app $BUILDER_IMAGE npm run build
-      script:
         - GIT_REVISION=`git describe --long --tags --dirty`
         - UI_IMAGE=william57m/mix-answer-ui
         - docker build -t $UI_IMAGE:$GIT_REVISION -f ./nginx/Dockerfile-prod .

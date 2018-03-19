@@ -15,18 +15,6 @@ before_install:
 jobs:
   include:
     - stage: build_ui
-      script:
-        - CHECKSUM=`cat ui/Dockerfile ui/package.json ui/scripts/webpack.config.prod.js | md5sum | awk '{print $1}'`
-        - BUILDER_IMAGE=william57m/mix-answer-builder:$CHECKSUM
-        - docker pull $BUILDER_IMAGE || { docker build -f Dockerfile-base -t $BUILDER_IMAGE ui; docker push $BUILDER_IMAGE; }
-        - docker run --rm -v $PWD/app:/home/webapp/app $BUILDER_IMAGE npm run build
-        - GIT_REVISION=`git describe --long --tags --dirty`
-        - UI_IMAGE=william57m/mix-answer-ui
-        - docker build -t $UI_IMAGE:$GIT_REVISION -f ./nginx/Dockerfile-prod .
-        - docker push $UI_IMAGE:$GIT_REVISION
+      script: ./scripts/build_ui.sh
     - stage: build_server
-      script:
-        - GIT_REVISION=`git describe --long --tags --dirty`
-        - SERVER_IMAGE=william57m/mix-answer-server
-        - docker build -t $SERVER_IMAGE:$GIT_REVISION -f ./server/Dockerfile server
-        - docker push $SERVER_IMAGE:$GIT_REVISION
+      script: ./scripts/build_server.sh

@@ -108,7 +108,7 @@ class AuthenticationService:
         """
         @functools.wraps(func)
         def wrapper(handler, *args, **kwargs):
-            if is_creator(handler.user, handler.object):
+            if is_creator(handler.user, handler.object) or handler.user.is_admin:
                 return func(handler, *args, **kwargs)
             else:
                 raise NotAllowedError()

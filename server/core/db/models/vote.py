@@ -1,3 +1,4 @@
+from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
@@ -11,6 +12,8 @@ from core.db.models import Base
 class Vote(Base):
 
     __tablename__ = 'votes'
+
+    up_down = Column(Boolean, default=True)
 
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False, primary_key=True)
     user = relationship('User', backref=backref('votes', cascade='all, delete-orphan'))

@@ -154,6 +154,13 @@ def check_param(data, name, type_param, required):
             param = int(param)
         except ValueError:
             raise BadRequestError(f'Param {name} must be an integer')
+    elif type_param == 'boolean':
+        if param in [True, 'True', 'true', '1', 1]:
+            return True
+        elif param in [False, 'False', 'false', '0', 0]:
+            return False
+        else:
+            raise BadRequestError(f'Param {name} must be a boolean')
     elif type_param == 'list':
         if type(param) is not list:
             raise BadRequestError(f'Param {name} must be an array')

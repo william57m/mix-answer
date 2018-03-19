@@ -54,7 +54,7 @@ class Answer extends React.Component {
                 <div className="right-content">
                     {type === 'question' ?
                         <div dangerouslySetInnerHTML={{__html: this.props.question.body}} /> :
-                        <div dangerouslySetInnerHTML={{__html: this.props.answer.message}} />
+                        <div dangerouslySetInnerHTML={{__html: this.props.answer.body}} />
                     }
                     {type === 'question' ?
                         <TagRow tags={this.props.question.tags} /> : null
@@ -118,8 +118,8 @@ class Reply extends React.Component {
     }
     postAnswer() {
         var questionId = this.props.question.id;
-        var message = this.refs.inputAnswer.state.text;
-        AnswerStore.create(questionId, message);
+        var body = this.refs.inputAnswer.state.text;
+        AnswerStore.create(questionId, body);
     }
     render() {
         return (

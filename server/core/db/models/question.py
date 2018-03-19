@@ -7,7 +7,7 @@ from sqlalchemy import Table
 from sqlalchemy.orm import relationship
 
 from core.db.models import Base
-from core.db.models import LogEntity
+from core.db.models import Post
 
 
 association_table = Table(
@@ -17,13 +17,11 @@ association_table = Table(
 )
 
 
-class Question(LogEntity):
+class Question(Post):
 
     __tablename__ = 'questions'
 
-    id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
-    body = Column(String, nullable=False)
 
     answers = relationship('Answer', cascade='all, delete-orphan')
     tags = relationship('Tag', secondary=association_table, backref='questions')
@@ -32,12 +30,9 @@ class Question(LogEntity):
     user = relationship('User', backref='questions')
 
     def to_dict(self):
-        my_dict = LogEntity.to_dict(self)
+        my_dict = Post.to_dict(self)
         my_dict.update({
-            'id': self.id,
             'title': self.title,
-            'body': self.body,
-            'nb_answers': len(self.answers),
             'tags': [tag.label for tag in self.tags],
             'user': self.user.to_dict()
         })

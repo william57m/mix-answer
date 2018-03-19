@@ -1,3 +1,5 @@
+import json
+
 from sqlalchemy.exc import SQLAlchemyError
 
 from core.api import BaseRequestHandler
@@ -5,6 +7,7 @@ from core.db.models import Answer
 from core.db.models import Vote
 from core.services.authentication import AuthenticationService
 from core.utils.exceptions import InternalServerError
+from core.utils.query import check_param
 
 
 class VoteHandler(BaseRequestHandler):
@@ -21,6 +24,10 @@ class VoteHandler(BaseRequestHandler):
         # Get user id
         user_id = self.user.id
 
+        # Create data
+        data = json.loads(self.request.body.decode('utf-8'))
+        up_down = check_param(data, name='up_down', type_param='boolean', required=True)
+
         # Check vote
         vote = self.application.db.query(Vote).filter(Vote.answer_id == answer_id) \
                                               .filter(Vote.user_id == user_id) \
@@ -28,10 +35,10 @@ class VoteHandler(BaseRequestHandler):
 
         # Commit in DB
         try:
-            if vote:
+            if vote and vote.up_down == up_down:
                 self.application.db.delete(vote)
             else:
-                vote = Vote(user_id=user_id, answer_id=answer_id)
+                vote = Vote(user_id=user_id, answer_id=answer_id, up_down=up_down)
                 self.application.db.add(vote)
             self.application.db.commit()
         except SQLAlchemyError as error:

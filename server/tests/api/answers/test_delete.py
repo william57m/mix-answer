@@ -26,7 +26,7 @@ class TestWithValidParams(AuthAppTestCase):
         super().setUp()
         u1 = User(firstname="Fernando", lastname="Alonso", email="fernando.alonso@mclaren.com")
         q1 = Question(title="What is the fatest car?", body="Which team should I chose to win the F1 world championship?", user=u1)
-        self.answer = Answer(message="Message 1", question=q1, user=self.request_user, creator_id=self.request_user.id)
+        self.answer = Answer(body="Message 1", question=q1, user=self.request_user, creator_id=self.request_user.id)
         self.db.add(u1)
         self.db.add(q1)
         self.db.add(self.answer)

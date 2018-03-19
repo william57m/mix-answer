@@ -91,9 +91,9 @@ def add_data_test(db):
     db.add(t5)
 
     # Add answers
-    a1 = Answer(message='Mix Answer has been setup to work with Docker. You just need to install Docker on your machine and follow the instruction, it\'s as easy as that.', user=u2)
-    a2 = Answer(message='I confirm, just follow the instructions, it\'s so easy.', user=u2)
-    a3 = Answer(message='There are a lot of popular frameworks today so it\'s difficult to choose. I can recommend you ReactJS, this is the tool used for Mix Answer', user=u1)
+    a1 = Answer(body='Mix Answer has been setup to work with Docker. You just need to install Docker on your machine and follow the instruction, it\'s as easy as that.', user=u2)
+    a2 = Answer(body='I confirm, just follow the instructions, it\'s so easy.', user=u2)
+    a3 = Answer(body='There are a lot of popular frameworks today so it\'s difficult to choose. I can recommend you ReactJS, this is the tool used for Mix Answer', user=u1)
     db.add(a1)
     db.add(a2)
     db.add(a3)

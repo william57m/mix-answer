@@ -26,9 +26,9 @@ class AnswerStore {
         });
         return answer;
     }
-    create(questionId, message) {
+    create(questionId, body) {
         var data = {
-            message: message
+            body: body
         };
         var promise = this._create(questionId, data);
         promise.then(result => {

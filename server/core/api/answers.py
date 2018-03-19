@@ -47,8 +47,8 @@ class AnswerHandler(BaseRequestHandler):
 
         # Create data
         data = json.loads(self.request.body.decode('utf-8'))
-        message = check_param(data, name='message', type_param='string', required=True)
-        answer = Answer(message=message, question_id=question_id, user=self.user)
+        body = check_param(data, name='body', type_param='string', required=True)
+        answer = Answer(body=body, question_id=question_id, user=self.user)
 
         # Commit in DB
         try:
@@ -78,7 +78,7 @@ class AnswerByIdHandler(BaseRequestHandler):
 
         # Update basic properties
         data = json.loads(self.request.body.decode('utf-8'))
-        update_by_property_list(['message'], data, self.object)
+        update_by_property_list(['body'], data, self.object)
 
         # Commit in DB
         try:

@@ -11,7 +11,7 @@ URI = '/questions/{id}/answers'
 
 def get_valid_data():
     return {
-        'message': 'Message 1',
+        'body': 'Message 1',
     }
 
 
@@ -63,7 +63,7 @@ class TestWithValidParams(AuthAppTestCase):
         # Check returned data
         returned_data = body['data']
 
-        keys = ['message']
+        keys = ['body']
         for key in keys:
             self.assertIn(key, returned_data)
             self.assertEqual(data[key], returned_data[key])

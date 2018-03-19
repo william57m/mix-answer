@@ -11,7 +11,7 @@ URI = '/answers/{id}'
 
 def get_valid_data():
     return {
-        'message': 'New Message'
+        'body': 'New Message'
     }
 
 
@@ -34,7 +34,7 @@ class TestWithValidParams(AuthAppTestCase):
         super().setUp()
         u1 = User(firstname="Fernando", lastname="Alonso", email="fernando.alonso@mclaren.com")
         q1 = Question(title="What is the fatest car?", body="Which team should I chose to win the F1 world championship?", user=u1)
-        self.answer = Answer(message="Message 1", question=q1, user=u1, creator_id=self.request_user.id)
+        self.answer = Answer(body="Message 1", question=q1, user=u1, creator_id=self.request_user.id)
         self.db.add(u1)
         self.db.add(q1)
         self.db.add(self.answer)
@@ -61,5 +61,5 @@ class TestWithValidParams(AuthAppTestCase):
 
         # Check returned data
         returned_data = body['data']
-        self.assertIn('message', returned_data)
-        self.assertEqual(data['message'], returned_data['message'])
+        self.assertIn('body', returned_data)
+        self.assertEqual(data['body'], returned_data['body'])

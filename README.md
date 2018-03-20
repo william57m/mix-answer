@@ -1,5 +1,7 @@
 # Mix Answer
 
+[![Build Status](https://travis-ci.org/william57m/mix-answer.svg?branch=master)](https://travis-ci.org/william57m/mix-answer)
+
 
 ## Overview
 Mix Answer is a Question & Answer platform, a StackOverflow like tool.

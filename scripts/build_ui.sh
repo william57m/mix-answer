@@ -19,4 +19,5 @@ docker run --rm \
 GIT_REVISION=`git describe --long --tags --dirty`
 UI_IMAGE=william57m/mix-answer-ui
 docker build -t $UI_IMAGE:$GIT_REVISION -f ./nginx/Dockerfile-prod .
+docker tag -f $UI_IMAGE:$GIT_REVISION $UI_IMAGE:latest
 docker push $UI_IMAGE:$GIT_REVISION

@@ -1,0 +1,45 @@
+FROM        python:3.6.4
+EXPOSE      5000
+
+# Environment variables
+ENV         ANSWER_APP_DIR=/home/mixanswer \
+            ANSWER_LOG_DIR=/var/log/mixanswer \
+            ANSWER_USER=mixanswer
+
+# Create all the necessary directories and assign them to $ANSWER_USER
+RUN         groupadd -r \
+                $ANSWER_USER \
+            && useradd -r \
+                -g $ANSWER_USER \
+                $ANSWER_USER \
+            && mkdir -p \
+                $ANSWER_APP_DIR \
+                $ANSWER_LOG_DIR \
+            && chown -R \
+                $ANSWER_USER \
+                $ANSWER_APP_DIR \
+                $ANSWER_LOG_DIR \
+                /usr/local/lib/python3.6 \
+            && chgrp -R \
+                $ANSWER_USER \
+                $ANSWER_APP_DIR \
+                $ANSWER_LOG_DIR
+
+VOLUME      ["$ANSWER_LOG_DIR"]
+
+WORKDIR     $ANSWER_APP_DIR
+
+# Install dependencies
+COPY        ./requirements.txt $ANSWER_APP_DIR/
+RUN         pip install --disable-pip-version-check -r requirements.txt
+
+# Adding files
+COPY        ./config/prod.conf $ANSWER_APP_DIR/config/prod.conf
+COPY        . $ANSWER_APP_DIR
+
+# Install the server
+RUN         python setup.py install && chown -R $ANSWER_USER $ANSWER_APP_DIR
+
+# Run the server
+USER        $ANSWER_USER
+CMD         ["python", "core/webserver.py", "--config", "/home/mixanswer/config/prod.conf"]

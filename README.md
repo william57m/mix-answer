@@ -67,7 +67,9 @@ docker run --rm -it \
 
 
 ## Deployment
-TO WRITE
+1. Copy the `docker-compose-prod.yml` file on the server you want to deploy the tool
+2. Run `docker-compose up -d` it will automatically pull the images and start the services
+3. Init the DB `docker-compose run --rm --no-deps mix-answer-server python scripts/init_db.py --config config/prod.conf`
 
 
 ## Roadmap
@@ -75,6 +77,6 @@ TO WRITE
 
 
 ## Contribution
-- Please use flake8 as syntax linter
-- Please write tests
-- Please open a pull request for review
+- Please use [flake8](http://flake8.pycqa.org/) (Python) and [eslint](https://eslint.org/) (JavaScript) as syntax linter
+- Please write and run the tests before to submit a Pull Request
+- Please open a Pull Request for review

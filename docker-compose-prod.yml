@@ -1,0 +1,42 @@
+---
+version: '2'
+
+services:
+    mix-answer-server:
+        image: william57m/mix-answer-server:0.0.1-10-g59b38fb
+        container_name: mix-answer-server
+        network_mode: bridge
+        links:
+            - mix-answer-postgres:db
+            - mix-answer-redis:redis
+
+    mix-answer-postgres:
+        image: postgres:9.4
+        container_name: mix-answer-postgres
+        network_mode: bridge
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_USER=mixuser
+            - POSTGRES_PASSWORD=mixuser
+            - POSTGRES_DB=mixanswer
+
+    mix-answer-redis:
+        image: redis:3.2
+        container_name: mix-answer-redis
+        network_mode: bridge
+        volumes:
+          - redis-data:/data
+
+    mix-answer-ui:
+        image: william57m/mix-answer-ui:0.0.1-10-g59b38fb
+        container_name: mix-answer-nginx
+        network_mode: bridge
+        environment:
+            - ANSWER_SERVER=mix-answer-server:5000
+        ports:
+            - "8080:80"
+
+volumes:
+    postgres-data:
+    redis-data:

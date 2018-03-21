@@ -1,3 +1,19 @@
+@mixin inline-buttons {
+    button {
+        margin: 10px 10px 0 0;
+        i {
+            margin-right: 5px;
+        }
+    }
+}
+
+.error-box {
+    margin-top: 40px;
+    background: #e85555;
+    border-radius: 5px;
+    padding: 10px 10px 10px 30px;
+    color: #fff;
+}
 .question-title {
     border-bottom: 1px solid lightgrey;
     font-size: 20px;
@@ -27,6 +43,25 @@
         margin: 10px 0 0 10px;
         width: calc(100% - 60px);
         display: inline-block;
+        .content-body {
+            min-height: 70px;
+        }
+        .edit-answer {
+            @include inline-buttons;
+        }
+        .edit-question > div {
+            margin-bottom: 20px;
+            @include question-title;
+        }
+        .edit-question {
+            @include inline-buttons;
+            .error-box {
+                margin-top: 0px;
+            }
+            .ql-formats {
+                margin: 0px;
+            }
+        }
         .user-action {
             margin-top: 3px;
             margin-right: 5px;

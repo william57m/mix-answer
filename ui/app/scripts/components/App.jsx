@@ -4,11 +4,14 @@ import React from 'react';
 // App imports
 import NavBar from './common/NavBar';
 import SessionStore from '../stores/session';
-
+import TagStore from '../stores/tag';
 
 class App extends React.Component {
     componentDidMount() {
-        SessionStore.init();
+        Promise.all([
+            SessionStore.init(),
+            TagStore.init()
+        ]);
     }
     render() {
         return (

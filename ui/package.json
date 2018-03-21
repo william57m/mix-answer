@@ -38,7 +38,6 @@
   },
   "dependencies": {
     "bootstrap-sass": "^3.3.7",
-    "draft-js": "^0.10.5",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
     "jquery": "^3.3.1",
@@ -47,7 +46,7 @@
     "moment": "^2.21.0",
     "node-sass": "^4.7.2",
     "react-bootstrap": "^0.32.1",
-    "react-draft-wysiwyg": "^1.12.11",
+    "react-quill": "^1.2.6",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-tag-input": "^4.8.2"

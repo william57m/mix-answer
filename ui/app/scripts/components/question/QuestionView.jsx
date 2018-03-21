@@ -11,12 +11,65 @@ import QuestionStore from '../../stores/question';
 import RouteService from '../../services/RouteService';
 import SessionStore from '../../stores/session';
 import TagRow from '../common/TagRow';
+import TagInput from '../common/TagInput';
+import InlineInput from '../common/InlineInput';
+import Spinner from '../common/Spinner';
 
-
+@observer
 class Answer extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            isEditing: false,
+            errors: []
+        };
         this.delete = this.delete.bind(this);
+        this.edit = this.edit.bind(this);
+        this.save = this.save.bind(this);
+    }
+    edit() {
+        this.setState({isEditing: this.props.type});
+    }
+    save() {
+        if (this.props.type === 'answer') {
+            const { answer } = this.props;
+            const { editAnswer } = this.refs;
+            AnswerStore.edit(answer.id, {
+                ...answer,
+                body: editAnswer.state.html
+            }).then(() => {
+                this.setState({isEditing: false});
+            });
+        } else {
+            const { question } = this.props;
+            const { inputTitle, editQuestion, inputTag } = this.refs;
+
+            const title = inputTitle.state.text;
+            const body = editQuestion.state.html;
+            const tags = inputTag.getTags();
+
+            const errors = [];
+            if (title.length < 6) {
+                errors.push('Title has to have at least 6 characters');
+            }
+            if (body.length < 6) {
+                errors.push('Message body has to have at least 6 characters');
+            }
+            if (tags < 1) {
+                errors.push('You must select at least one tag');
+            }
+            this.setState({ errors: errors });
+            if (errors.length === 0) {
+                QuestionStore.edit(question.id, {
+                    ...question,
+                    title: title,
+                    body: body,
+                    tags: tags
+                }).then(() => {
+                    this.setState({isEditing: false});
+                });
+            }
+        }
     }
     vote(upDown) {
         if (this.props.type === 'question') {
@@ -54,17 +107,39 @@ class Answer extends React.Component {
             user = this.props.answer.user.firstname + ' ' + this.props.answer.user.lastname;
             vote = this.props.answer.votes;
         }
-        return (
-            <div className={`content-format ${type === 'question' ? 'question-type' : 'answer-type'}`}>
-                <div className="left-vote">
-                    <div><i className={'fa fa-caret-up'} onClick={this.vote.bind(this, true)} /></div>
-                    <div>{vote}</div>
-                    <div><i className={'fa fa-caret-down'} onClick={this.vote.bind(this, false)} /></div>
-                </div>
-                <div className="right-content">
+        const editAnswer = (
+            this.state.isEditing === 'answer' ?
+                <div className="edit-answer">
+                    <EditorText ref="editAnswer" value={this.props.answer.body} />
+                    <button className="btn btn-primary" onClick={this.save}>
+                        <i className="fa fa-edit"/>Save
+                    </button>
+                    <button className="btn" onClick={() => this.setState({isEditing: false})}>Cancel</button>
+                </div> : null
+        );
+        const editQuestion = (
+            this.state.isEditing === 'question' ?
+                <div className="edit-question">
+                    { this.state.errors.length > 0 ?
+                        <ul className="error-box">
+                            { this.state.errors.map((error, i) => <li key={i}>{error}</li>) }
+                        </ul> : null
+                    }
+                    <InlineInput ref="inputTitle" value={this.props.question.title} />
+                    <EditorText ref="editQuestion" value={this.props.question.body} />
+                    <TagInput ref="inputTag" tags={this.props.question.tags} />
+                    <button className="btn btn-primary" onClick={this.save}>
+                        <i className="fa fa-edit"/>Save
+                    </button>
+                    <button className="btn" onClick={() => this.setState({isEditing: false})}>Cancel</button>
+                </div> : null
+        );
+        const normal = (
+            !this.state.isEditing ?
+                <React.Fragment>
                     {type === 'question' ?
                         <div dangerouslySetInnerHTML={{__html: this.props.question.body}} /> :
-                        <div dangerouslySetInnerHTML={{__html: this.props.answer.body}} />
+                        <div className="content-body" dangerouslySetInnerHTML={{__html: this.props.answer.body}} />
                     }
                     {type === 'question' ?
                         <TagRow tags={this.props.question.tags} /> : null
@@ -76,12 +151,25 @@ class Answer extends React.Component {
                     </div>
                     <div>
                         {canEdit ?
-                            <span className="user-action">edit</span> : null
+                            <span onClick={this.edit} className="user-action">edit</span> : null
                         }
                         {canDelete ?
                             <span className="user-action" onClick={this.delete}>delete</span> : null
                         }
                     </div>
+                </React.Fragment> : null
+        );
+        return (
+            <div className={`content-format ${type === 'question' ? 'question-type' : 'answer-type'}`}>
+                <div className="left-vote">
+                    <div><i className={'fa fa-caret-up'} onClick={this.vote.bind(this, true)} /></div>
+                    <div>{vote}</div>
+                    <div><i className={'fa fa-caret-down'} onClick={this.vote.bind(this, false)} /></div>
+                </div>
+                <div className="right-content">
+                    { editAnswer }
+                    { editQuestion }
+                    { normal }
                 </div>
             </div>
         );
@@ -93,7 +181,7 @@ class Answers extends React.Component {
     render() {
         const answers = this.props.answers.map(answer => {
             return (
-                <Answer key={answer.id} answer={answer} />
+                <Answer key={answer.id} answer={answer} type={'answer'} />
             );
         });
         return (
@@ -128,8 +216,10 @@ class Reply extends React.Component {
     }
     postAnswer() {
         var questionId = this.props.question.id;
-        var body = this.refs.inputAnswer.state.text;
-        AnswerStore.create(questionId, body);
+        var body = this.refs.inputAnswer.state.html;
+        AnswerStore.create(questionId, body).then(() => {
+            this.refs.inputAnswer.clearForm();
+        });
     }
     render() {
         return (
@@ -165,11 +255,12 @@ class QuestionView extends React.Component {
         return (
             <div className="question-view">
                 <div className="question-content-container">
-                    {currentQuestion ?
+                    { !currentQuestion || !AnswerStore.isLoaded || !QuestionStore.isCurrentLoaded ?
+                        <Spinner /> :
                         <React.Fragment>
                             <Question question={currentQuestion} />
                             <Answers answers={answers} />
-                        </React.Fragment> : null
+                        </React.Fragment>
                     }
                     {currentQuestion && canReply ?
                         <Reply question={currentQuestion} /> : null

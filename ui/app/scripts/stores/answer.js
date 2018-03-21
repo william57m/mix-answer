@@ -36,6 +36,15 @@ class AnswerStore {
         });
         return promise;
     }
+    edit(id, data) {
+        var promise = this._edit(id, data);
+        promise.then(() => {
+            var answer = this.get(id);
+            var indexAnswer = this.answers.indexOf(answer);
+            this.answers[indexAnswer] = data;
+        });
+        return promise;
+    }
     delete(id) {
         var promise = this._delete(id);
         promise.then(() => {
@@ -66,6 +75,14 @@ class AnswerStore {
         return $.ajax({
             method: 'POST',
             url: URL.answers.replace(':questionId', questionId),
+            dataType: 'json',
+            data: JSON.stringify(data)
+        });
+    }
+    _edit(id, data) {
+        return $.ajax({
+            method: 'PUT',
+            url: URL.answer.replace(':answerId', id),
             dataType: 'json',
             data: JSON.stringify(data)
         });

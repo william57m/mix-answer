@@ -8,6 +8,7 @@ class QuestionStore {
     @observable questions = [];
     @observable currentQuestion = undefined;
     @observable isLoaded = false;
+    @observable isCurrentLoaded = false;
 
     loadAll() {
         this.isLoaded = false;
@@ -20,8 +21,10 @@ class QuestionStore {
     }
     setCurrent(id) {
         var promise = this._load(id);
+        this.isCurrentLoaded = false;
         promise.then(result => {
             this.currentQuestion = result.question;
+            this.isCurrentLoaded = true;
         });
         return promise;
     }
@@ -43,6 +46,16 @@ class QuestionStore {
         var promise = this._create(data);
         promise.then(result => {
             this.questions.push(result.data);
+        });
+        return promise;
+    }
+    edit(id, data) {
+        var promise = this._edit(id, data);
+        promise.then(() => {
+            var question = this.get(id);
+            var indexQuestion = this.questions.indexOf(question);
+            this.questions[indexQuestion] = data;
+            this.currentQuestion = data;
         });
         return promise;
     }
@@ -80,6 +93,14 @@ class QuestionStore {
         return $.ajax({
             method: 'POST',
             url: URL.questions,
+            dataType: 'json',
+            data: JSON.stringify(data)
+        });
+    }
+    _edit(id, data) {
+        return $.ajax({
+            method: 'PUT',
+            url: URL.question.replace(':questionId', id),
             dataType: 'json',
             data: JSON.stringify(data)
         });

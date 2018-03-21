@@ -1,49 +1,53 @@
 // Lib imports
 import React from 'react';
-import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 class EditorText extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            editorState: EditorState.createEmpty(),
-            text: ''
+            html: props.value ? props.value : ''
+        };
+
+        this.modules = {
+            toolbar: [
+                ['bold', 'italic', 'underline', 'strike'],
+                ['blockquote', 'code-block'],
+
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'script': 'sub'}, { 'script': 'super' }],
+                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                [{ 'direction': 'rtl' }],
+
+                [{ 'size': ['small', false, 'large', 'huge'] }],
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'font': [] }],
+                [{ 'align': [] }],
+
+                ['clean']
+            ]
         };
 
         // Bind functions
-        this.onEditorStateChange = this.onEditorStateChange.bind(this);
-        this.onTextChange = this.onTextChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
-    onEditorStateChange(editorState) {
-        this.setState({
-            editorState: editorState
-        });
+    handleChange(html) {
+        this.setState({ html: html });
     }
-    onTextChange(editorState) {
-        this.setState({
-            text: editorState.blocks[0].text
-        });
-        this.props.onChange && this.props.onChange(editorState);
+    clearForm() {
+        this.setState({ html: '' });
     }
     render() {
         return (
-            <Editor editorState={this.state.editorState}
-                toolbarClassName="editor-toolbar"
-                wrapperClassName="editor-wrapper"
-                editorClassName="editor"
-                onChange={this.onTextChange}
-                // toolbar={{
-                //     blockType: {
-                //     inDropdown: true,
-                //     options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
-                //     className: undefined,
-                //     component: undefined,
-                //     dropdownClassName: undefined
-                //     }
-                // }}
-                onEditorStateChange={this.onEditorStateChange} />
+            <div className={this.props.className}>
+                <ReactQuill value={this.state.html}
+                    modules={this.modules}
+                    theme={'snow'}
+                    onChange={this.handleChange} />
+            </div>
         );
     }
 }

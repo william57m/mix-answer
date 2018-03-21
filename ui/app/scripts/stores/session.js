@@ -9,7 +9,7 @@ class SessionStore {
     @observable isLoaded = false;
 
     init() {
-        $.get(URL.init).then(result => {
+        return $.get(URL.init).then(result => {
             if (result.user) {
                 this.user = result.user;
             }

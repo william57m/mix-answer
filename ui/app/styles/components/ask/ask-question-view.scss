@@ -1,5 +1,4 @@
-.question-ask-title {
-    margin: 40px 0px 40px 0px;
+@mixin question-title {
     .question-ask-label {
         margin-right: 20px;
         font-weight: bold;
@@ -11,76 +10,85 @@
     }
 }
 
-.editor-wrapper {
-    border: 1px solid #c8ccd0;
-}
-.editor {
-    padding: 0px 10px;
-    min-height: 300px;
+.question-ask-title {
+    margin: 40px 0px 40px 0px;
+    @include question-title;
 }
 
+// Quill
+.ql-container {
+    height: 300px;
+    .ql-editor {
+        pre.ql-syntax {
+            background-color: #f0f0f0;
+            color: inherit;
+        } 
+    }
+}
+
+// Tags
 .question-ask-tag {
     margin: 40px 0px 0px 0px;
-    .tags {
-        position: relative;
+}
+.tags {
+    position: relative;
+}
+.tag-input {
+    display: inline-block;
+    width: 200px;
+}
+.tag-input-field {
+    padding: 5px;
+    height: 30px;
+    margin: 0;
+    width: 100%;
+}
+.tag-selected {
+    
+}
+.tag {
+    cursor: move;
+    padding: 3px 10px;
+    display: inline-block;
+    margin: 0px 10px 0px 0px;
+    padding: 3px 10px;
+    background: #E1ECF4;
+    color: #39739d;
+    font-size: 11px;
+    &:hover {
+        background: #b2d1e7;
     }
-    .tag-input {
-        display: inline-block;
-        width: 200px;
-    }
-    .tag-input-field {
-        padding: 5px;
-        height: 30px;
-        margin: 0;
+} 
+.tag-remove {
+    cursor: pointer;
+    margin-left: 5px;
+    text-decoration: none;
+}
+.tags-suggestions {
+    width: 200px;
+    position: absolute;
+    padding: 0;
+    ul {
         width: 100%;
-    }
-    .tag-selected {
-        
-    }
-    .tag {
-        cursor: move;
-        padding: 3px 10px;
-        display: inline-block;
-        margin: 0px 10px 0px 0px;
-        padding: 3px 10px;
-        background: #E1ECF4;
-        color: #39739d;
-        font-size: 11px;
-        &:hover {
-            background: #b2d1e7;
-        }
-    } 
-    .tag-remove {
-        cursor: pointer;
-        margin-left: 5px;
-        text-decoration: none;
-    }
-    .tags-suggestions {
-        width: 200px;
-        position: absolute;
+        list-style-type: none;
+        background: white;
         padding: 0;
-        ul {
-            width: 100%;
-            list-style-type: none;
-            background: white;
-            padding: 0;
-            li {
-                width: 200px;
-                position: absolute;
-                border-bottom: 1px solid #ddd;
-                border-right: 1px solid #ddd;
-                border-left: 1px solid #ddd;
-                margin: 0;
-                padding: 5px 10px;
-                mark {
-                    color: $primary-color;
-                    background: none;
-                    font-weight: 500;
-                }
-                &.tag-active {
-                    cursor: pointer;
-                    background: #E1ECF4;
-                }
+        li {
+            width: 200px;
+            position: absolute;
+            border-bottom: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-left: 1px solid #ddd;
+            margin: 0;
+            padding: 5px 10px;
+            mark {
+                color: $primary-color;
+                background: none;
+                font-weight: 500;
+            }
+            &.tag-active {
+                cursor: pointer;
+                background: #E1ECF4;
             }
         }
     }

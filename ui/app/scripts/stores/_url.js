@@ -5,6 +5,9 @@ export default URL = {
     question: 'api/questions/:questionId',
     questions: 'api/questions',
 
+    // Tags
+    tags: 'api/tags',
+
     // Votes
     voteAnswer: 'api/answers/:answerId/votes',
     voteQuestion: 'api/questions/:questionId/votes',

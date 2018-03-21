@@ -15,6 +15,7 @@ from tornado.web import Application
 import core.api.answers as answers_handler
 import core.api.authentication as authentication_handler
 import core.api.init as init_handler
+import core.api.ping as ping_handler
 import core.api.questions as questions_handler
 import core.api.tags as tags_handler
 import core.api.users as users_handler
@@ -46,7 +47,9 @@ class WebServer(Application):
             # Users
             (r'/login/?', authentication_handler.LoginHandler),
             (r'/logout/?', authentication_handler.LogoutHandler),
-            (r'/users/?', users_handler.UserHandler)
+            (r'/users/?', users_handler.UserHandler),
+            # Others
+            (r'/ping/?', ping_handler.PingHandler)
         ]
 
     def __init__(self, config):

@@ -3,7 +3,7 @@ version: '2'
 
 services:
     mix-answer-server:
-        image: william57m/mix-answer-server:0.0.1-10-g59b38fb
+        image: william57m/mix-answer-server:0.0.1-16-g40edfcc
         container_name: mix-answer-server
         network_mode: bridge
         links:
@@ -29,9 +29,11 @@ services:
           - redis-data:/data
 
     mix-answer-ui:
-        image: william57m/mix-answer-ui:0.0.1-10-g59b38fb
+        image: william57m/mix-answer-ui:0.0.1-16-g40edfcc
         container_name: mix-answer-nginx
         network_mode: bridge
+        links:
+            - mix-answer-server:mix-answer-server
         environment:
             - ANSWER_SERVER=mix-answer-server:5000
         ports:

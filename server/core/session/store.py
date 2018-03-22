@@ -62,8 +62,6 @@ class SessionStore:
 
     def get_internal_session(self, session_id):
         session_info = self.get_redis_session(session_id)
-        log.info('DEBUG 8')
-        log.info(session_info)
         if session_info:
             redis_repr = {
                 'name': self.get_redis_key_repr(session_id),
@@ -126,20 +124,13 @@ class SessionStore:
         Lookup request handler's cached session id, if absent try retrieving it from the cookies
         """
         session_id = self.get_cached_session_id(request_handler) or self.get_session_id_from_cookies(request_handler)
-        log.debug('DEBUG LOG')
-        log.info('DEBUG 1')
-        log.info(session_id)
         session = self.get_internal_session(session_id)
-        log.info('DEBUG 2')
-        log.info(session)
-        log.info(auto_register)
+
         # If there is no session at this point, we create one
         if session is None:
             if auto_register:
                 log.debug("Session '%s' doesn't exist, creating a new one...", session_id)
                 session = self.register(request_handler)
-                log.info('DEBUG 9')
-                log.info(session)
         else:
             session.register_accessed()
 
@@ -194,13 +185,10 @@ class SessionStore:
         if encoded_session_id is None:
             log.warn("Session could not be retrieved from cookie")
 
-        log.info('DEBUG 3')
         session_id = request_handler.get_secure_cookie(name=cls.COOKIE_NAME, value=encoded_session_id)
-        log.info('DEBUG 4')
         if session_id:
             session_id = session_id.decode('utf-8')
 
-        log.info('DEBUG 5')
         return session_id
 
     def regenerate(self, request_handler, user_id=None):

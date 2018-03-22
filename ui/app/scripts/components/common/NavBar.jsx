@@ -23,7 +23,7 @@ class NavBar extends React.Component {
             <div className="answer-header">
                 <div className="header-wrapper">
                     <div className="header-logo" onClick={() => RouteService.goTo('/questions')}>
-                        <img className="header-img" src="/resources/images/mix-logo-black.png"/>
+                        <img className="header-img" src="resources/images/mix-logo-black.png"/>
                         <div className="header-title">answer</div>
                     </div>
                     <div className="header-input">

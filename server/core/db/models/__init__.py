@@ -1,6 +1,8 @@
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy_searchable import make_searchable
 
 Base = declarative_base()
+make_searchable(Base.metadata)
 
 __all__ = [
     'Answer',

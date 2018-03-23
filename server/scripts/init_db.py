@@ -4,6 +4,7 @@ import sys
 
 from sqlalchemy import create_engine
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import configure_mappers
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
@@ -37,6 +38,9 @@ def main(argv=sys.argv):
     # Drop db
     engine = create_engine_db(config)
     Base.metadata.drop_all(engine)
+
+    # Configure mappers (needed for SQLAlchemy searchable)
+    configure_mappers()
 
     # Init DB
     db = initdb(config)

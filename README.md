@@ -48,7 +48,7 @@ docker run -d \
            -e POSTGRES_PASSWORD=mixuser \
            -e POSTGRES_DB=mixanswer \
            --name mix-answer-test-db \
-           postgres:9.4
+           postgres:10.3
 
 # Initialize the test DB
 docker run -t --rm \

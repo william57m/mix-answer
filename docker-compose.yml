@@ -17,7 +17,7 @@ services:
             - mix-answer-redis:redis
 
     mix-answer-postgres:
-        image: postgres:9.4
+        image: postgres:10.3
         container_name: mix-answer-postgres
         network_mode: bridge
         volumes:

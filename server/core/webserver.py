@@ -17,6 +17,7 @@ import core.api.authentication as authentication_handler
 import core.api.init as init_handler
 import core.api.ping as ping_handler
 import core.api.questions as questions_handler
+import core.api.search as search_handler
 import core.api.tags as tags_handler
 import core.api.users as users_handler
 import core.api.votes as votes_handler
@@ -33,6 +34,8 @@ class WebServer(Application):
         return [
             (r'/authenticated/?', authentication_handler.AuthenticatedHandler),
             (r'/init/?', init_handler.InitHandler),
+            # Search
+            (r'/search/?', search_handler.SearchHandler),
             # Questions
             (r'/questions/?', questions_handler.QuestionHandler),
             (r'/questions/(?P<question_id>[0-9]+)', questions_handler.QuestionByIdHandler),

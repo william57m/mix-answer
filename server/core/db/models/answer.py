@@ -4,6 +4,8 @@ from sqlalchemy import Integer
 
 from sqlalchemy.orm import relationship
 
+from sqlalchemy_utils.types import TSVectorType
+
 from core.db.models import Post
 
 
@@ -16,6 +18,9 @@ class Answer(Post):
 
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     user = relationship('User', backref='answers')
+
+    # Search vector
+    search_vector = Column(TSVectorType('body'))
 
     def to_dict(self):
         my_dict = Post.to_dict(self)

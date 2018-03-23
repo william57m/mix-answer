@@ -6,6 +6,8 @@ from sqlalchemy import Table
 
 from sqlalchemy.orm import relationship
 
+from sqlalchemy_utils.types import TSVectorType
+
 from core.db.models import Base
 from core.db.models import Post
 
@@ -28,6 +30,9 @@ class Question(Post):
 
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     user = relationship('User', backref='questions')
+
+    # Search vector
+    search_vector = Column(TSVectorType('title', 'body'))
 
     def to_dict(self):
         my_dict = Post.to_dict(self)

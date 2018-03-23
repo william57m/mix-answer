@@ -12,6 +12,13 @@ class NavBar extends React.Component {
     constructor(props) {
         super(props);
         this.logout = this.logout.bind(this);
+        this.onKeyUp = this.onKeyUp.bind(this);
+    }
+    onKeyUp(event) {
+        if (event.which === 13) {
+            var value = this.refs.searchInput.value;
+            RouteService.goTo(`/search?q=${value}`);
+        }
     }
     logout() {
         SessionStore.logout();
@@ -27,7 +34,7 @@ class NavBar extends React.Component {
                         <div className="header-title">answer</div>
                     </div>
                     <div className="header-input">
-                        <input type="text" placeholder="Search..." />
+                        <input type="text" ref="searchInput" placeholder="Search..." onKeyUp={this.onKeyUp} />
                     </div>
                     <ul className="header-buttons-container header-buttons-container-right">
                         <li onClick={() => RouteService.goTo('/question/ask')}><a>Ask a Question</a></li>

@@ -81,6 +81,9 @@ class QuestionStore {
         });
         return promise;
     }
+    search(value) {
+        return this._search(value);
+    }
 
     // Ajax requests
     _loadAll() {
@@ -118,6 +121,9 @@ class QuestionStore {
             dataType: 'json',
             data: JSON.stringify(data)
         });
+    }
+    _search(value) {
+        return $.get(URL.search.replace(':searchValue', value));
     }
 }
 

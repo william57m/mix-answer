@@ -11,6 +11,7 @@ import QuestionView from './components/question/QuestionView';
 import QuestionsViews from './components/questions/QuestionsView';
 import ProfileView from './components/profile/ProfileView';
 import LoginView from './components/LoginView';
+import SearchView from './components/search/SearchView';
 
 // Store
 import SessionStore from './stores/session';
@@ -64,6 +65,7 @@ class MainComponent extends React.Component {
                         <ParentRoute private path="/question/ask" component={AskQuestionView} />
                         <ParentRoute private path="/profile" component={ProfileView} />
                         <Route path="/question/:id" component={QuestionView} />
+                        <Route path="/search" component={SearchView} />
                         <Redirect to={'/questions'} />
                     </Switch>
                 </App>

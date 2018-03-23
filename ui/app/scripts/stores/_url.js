@@ -5,6 +5,9 @@ export default URL = {
     question: 'api/questions/:questionId',
     questions: 'api/questions',
 
+    // Search
+    search: 'api/search?q=:searchValue',
+
     // Tags
     tags: 'api/tags',
 

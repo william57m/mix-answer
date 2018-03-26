@@ -3,7 +3,6 @@
     overflow-x: hidden;
 
     .question-list {
-        margin-top: 50px;
         border-top: 1px solid lightgrey;
     }
 
@@ -79,4 +78,8 @@
             opacity: 0.8;
         }
     }
+}
+
+.empty-view {
+    text-align: center;
 }

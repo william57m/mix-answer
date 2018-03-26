@@ -45,14 +45,15 @@ class UserDropdown extends React.Component {
         this.setState({ showDropdown: !this.state.showDropdown });
     }
     render() {
+        var username = `${this.props.user.firstname} ${this.props.user.lastname}`;
         return (
             <li className="user-dropdown-li" onClick={this.toggleDropdown} ref="list">
-                <a>
-                    <span className="username">William </span>
+                <span>
+                    <img className="user-img" src="../../resources/default_avatar.png" />
                     <i className="fa fa-chevron-down" />
-                </a>
+                </span>
                 <ul style={{ display: this.state.showDropdown ? 'block': 'none' }} className="dropdown-menu user-dropdown-menu">
-                    <li onClick={this.goToProfile}><i className="fa fa-user"/> Profile</li>
+                    <li onClick={this.goToProfile}><i className="fa fa-user"/> {username}</li>
                     <li onClick={this.logout}><i className="fa fa-lock" /> Logout</li>
                 </ul>
             </li>
@@ -85,12 +86,10 @@ class NavBar extends React.Component {
                         <input type="text" ref="searchInput" placeholder="Search..." onKeyUp={this.onKeyUp} />
                     </div>
                     <ul className="header-buttons-container header-buttons-container-right">
-                        <li onClick={() => RouteService.goTo('/question/ask')}><a>Ask a Question</a></li>
+                        <li onClick={() => RouteService.goTo('/question/ask')}>Ask Question</li>
                         {user ?
-                            <UserDropdown /> : null
-                        }
-                        {!user ?
-                            <li onClick={() => RouteService.goTo('/login')}><a>Log In</a></li> : null
+                            <UserDropdown user={user} /> :
+                            <li onClick={() => RouteService.goTo('/login')}>Log In</li>
                         }
                     </ul>
                 </div>

@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import React from 'react';
 
 // App imports
-import QuestionRow from '../questions/QuestionRow';
+import QuestionList from '../questions/QuestionList';
 import QuestionStore from '../../stores/question';
 import RouteService from '../../services/RouteService';
 
@@ -48,17 +48,16 @@ class SearchView extends React.Component {
     }
 
     render() {
-        const questions = this.state.questions.map(question => {
-            return (
-                <QuestionRow key={question.id} question={question} />
-            );
-        });
         return (
-            <div className="questions-container">
-                <h4>Results for "{this.state.value}"</h4>
-                {questions ?
-                    questions :
-                    'No results'
+            <div className="search-page">
+                {this.state.questions.length ?
+                    <h4>Results for "{this.state.value}"</h4> :
+                    <h4>No result for "{this.state.value}"</h4>
+                }
+                {this.state.questions.length ?
+                    <div className="questions-container">
+                        <QuestionList questions={this.state.questions} />
+                    </div> : null
                 }
             </div>
         );

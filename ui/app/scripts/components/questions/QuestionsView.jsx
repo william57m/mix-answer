@@ -19,7 +19,11 @@ class QuestionsView extends React.Component {
         return (
             <div className="questions-container">
                 {QuestionStore.isLoaded ?
-                    <QuestionList /> :
+                    QuestionStore.questions.length ?
+                        <QuestionList questions={QuestionStore.questions} />  :
+                        <div className="empty-view">
+                            <h4>No results</h4>
+                        </div> :
                     <Spinner />
                 }
             </div>

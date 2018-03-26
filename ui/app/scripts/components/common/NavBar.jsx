@@ -7,11 +7,63 @@ import RouteService from '../../services/RouteService';
 import SessionStore from '../../stores/session';
 
 
+class UserDropdown extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showDropdown: false
+        };
+
+        // Bind functions
+        this.goToProfile = this.goToProfile.bind(this);
+        this.toggleDropdown = this.toggleDropdown.bind(this);
+        this.logout = this.logout.bind(this);
+        this.onBodyClick = this.onBodyClick.bind(this);
+    }
+
+    componentDidMount() {
+        document.body.addEventListener('click', this.onBodyClick);
+    }
+    componentWillUnmount() {
+        document.body.removeEventListener('click', this.onBodyClick);
+    }
+    onBodyClick(e) {
+        if (this.state.showDropdown && !this.refs.list.contains(e.target)) {
+            this.setState({ showDropdown: false });
+        }
+    }
+
+    // Actions
+    goToProfile() {
+        RouteService.goTo('/profile')
+    }
+    logout() {
+        SessionStore.logout();
+        RouteService.goTo('/questions');
+    }
+    toggleDropdown() {
+        this.setState({ showDropdown: !this.state.showDropdown });
+    }
+    render() {
+        return (
+            <li className="user-dropdown-li" onClick={this.toggleDropdown} ref="list">
+                <a>
+                    <span className="username">William </span>
+                    <i className="fa fa-chevron-down" />
+                </a>
+                <ul style={{ display: this.state.showDropdown ? 'block': 'none' }} className="dropdown-menu user-dropdown-menu">
+                    <li onClick={this.goToProfile}><i className="fa fa-user"/> Profile</li>
+                    <li onClick={this.logout}><i className="fa fa-lock" /> Logout</li>
+                </ul>
+            </li>
+        );
+    }
+}
+
 @observer
 class NavBar extends React.Component {
     constructor(props) {
         super(props);
-        this.logout = this.logout.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
     }
     onKeyUp(event) {
@@ -19,10 +71,6 @@ class NavBar extends React.Component {
             var value = this.refs.searchInput.value;
             RouteService.goTo(`/search?q=${value}`);
         }
-    }
-    logout() {
-        SessionStore.logout();
-        RouteService.goTo('/questions');
     }
     render() {
         var user = SessionStore.user;
@@ -39,11 +87,10 @@ class NavBar extends React.Component {
                     <ul className="header-buttons-container header-buttons-container-right">
                         <li onClick={() => RouteService.goTo('/question/ask')}><a>Ask a Question</a></li>
                         {user ?
-                            <li onClick={() => RouteService.goTo('/profile')}><a><i className="fa fa-user"/></a></li> : null
+                            <UserDropdown /> : null
                         }
-                        {user ?
-                            <li onClick={this.logout}><a><i className="fa fa-lock" /></a></li> :
-                            <li onClick={() => RouteService.goTo('/login')}><a><i className="fa fa-lock" /> Log in</a></li>
+                        {!user ?
+                            <li onClick={() => RouteService.goTo('/login')}><a>Log In</a></li> : null
                         }
                     </ul>
                 </div>

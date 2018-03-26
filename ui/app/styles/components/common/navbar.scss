@@ -3,13 +3,14 @@ $heightNavbar: 60px;
 .answer-header {
     height: $heightNavbar;
     padding: 0 100px;
-    border-bottom: 1px solid lightgrey;
     background-color: #24292e;
-    overflow: hidden;
+    overflow: visible;
 
     .header-wrapper {
         width: 1000px;
+        height: 100%;
         margin: auto;
+        position: relative;
     }
 
     .header-logo {
@@ -53,7 +54,7 @@ $heightNavbar: 60px;
         list-style: none;
         float: left;
         margin: 0;
-        li {
+        & > li {
             cursor: pointer;
             display: inline-block;
             padding: 20px;
@@ -71,6 +72,22 @@ $heightNavbar: 60px;
 
         &.header-buttons-container-right {
             float: right;
+        }
+    }
+}
+
+.user-dropdown-li {
+    position: relative;
+}
+.user-dropdown-menu {
+    border-radius: 0px;
+    padding: 0px;
+
+    & > li {
+        padding: 10px;
+        &:hover {
+            background: #F0F0F0;
+            cursor: pointer;
         }
     }
 }

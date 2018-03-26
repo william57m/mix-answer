@@ -79,12 +79,14 @@ class Answer extends React.Component {
         }
     }
     delete() {
-        if (this.props.type === 'question') {
-            QuestionStore.delete(this.props.question.id).then(() => {
-                RouteService.goTo('/questions');
-            });
-        } else {
-            AnswerStore.delete(this.props.answer.id);
+        if (confirm(`Are you sure you want to delete your ${this.props.type}?`)) {
+            if (this.props.type === 'question') {
+                QuestionStore.delete(this.props.question.id).then(() => {
+                    RouteService.goTo('/questions');
+                });
+            } else {
+                AnswerStore.delete(this.props.answer.id);
+            }
         }
     }
     render() {

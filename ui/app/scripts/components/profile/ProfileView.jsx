@@ -13,14 +13,21 @@ class ProfilePage extends React.Component {
         return (
             <div>
                 <h3>Profile View</h3>
-                <div className="form-group">
-                    <input type="text" className="form-control" value={user.firstname} disabled />
-                </div>
-                <div className="form-group">
-                    <input type="text" className="form-control" value={user.lastname} disabled />
-                </div>
-                <div className="form-group">
-                    <input type="text" className="form-control" value={user.email} disabled />
+                <div className="row">
+                    <div className="col-xs-2">
+                        <img src={user.gravatar_url} />
+                    </div>
+                    <div className="col-xs-10">
+                        <div className="form-group">
+                            <input type="text" className="form-control" value={user.firstname} disabled />
+                        </div>
+                        <div className="form-group">
+                            <input type="text" className="form-control" value={user.lastname} disabled />
+                        </div>
+                        <div className="form-group">
+                            <input type="text" className="form-control" value={user.email} disabled />
+                        </div>
+                    </div>
                 </div>
             </div>
         );

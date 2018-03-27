@@ -94,19 +94,24 @@ class Answer extends React.Component {
         var canDelete;
         const type = this.props.type;
         var user;
+        var userName;
         var date;
         var vote;
+        var imageUrl;
         if (type === 'question') {
             canEdit = SessionStore.user && SessionStore.user.id === this.props.question.creator_id;
             canDelete = SessionStore.user && SessionStore.user.id === this.props.question.creator_id;
-            date = moment(this.props.question.created_at).format(CONSTANTS.DATETIME_FORMAT);
-            user = this.props.question.user.firstname + ' ' + this.props.question.user.lastname;
+            date = moment(this.props.question.created_at).fromNow();
+            user = this.props.question.user;
+            userName = this.props.question.user.firstname + ' ' + this.props.question.user.lastname;
             vote = this.props.question.votes;
+            imageUrl = this.props.question.user.gravatar_url;
         } else {
             canEdit = SessionStore.user && SessionStore.user.id === this.props.answer.creator_id;
             canDelete = SessionStore.user && SessionStore.user.id === this.props.answer.creator_id;
-            date = moment(this.props.answer.created_at).format(CONSTANTS.DATETIME_FORMAT);
-            user = this.props.answer.user.firstname + ' ' + this.props.answer.user.lastname;
+            date = moment(this.props.answer.created_at).fromNow();
+            user = this.props.answer.user;
+            userName = this.props.answer.user.firstname + ' ' + this.props.answer.user.lastname;
             vote = this.props.answer.votes;
         }
         const editAnswer = (
@@ -146,10 +151,14 @@ class Answer extends React.Component {
                     {type === 'question' ?
                         <TagRow tags={this.props.question.tags} /> : null
                     }
-                    <div>
-                        <span className="description-footer">
-                            {`${type === 'question' ? 'asked' : 'answered'}`} {date} <span className="description-user">{user}</span>
-                        </span>
+                    <div className="description-footer">
+                        <div className="description-img">
+                            <img src={user.gravatar_url} />
+                        </div>
+                        <div className="description-content">
+                            <div>{`${type === 'question' ? 'asked' : 'answered'}`} {date}</div>
+                            <div className="description-user">{userName} ({user.nb_answers} <i className="fa fa-star"/>)</div>
+                        </div>
                     </div>
                     <div>
                         {canEdit ?

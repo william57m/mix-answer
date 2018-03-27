@@ -1,3 +1,5 @@
+import hashlib
+
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import Integer
@@ -24,6 +26,16 @@ class User(LogEntity):
             'firstname': self.firstname,
             'lastname': self.lastname,
             'email': self.email,
+            'gravatar_url': self.get_gravatar_thumbnail(),
             'is_admin': self.is_admin
         })
+        my_dict.update({
+            'nb_answers': len(self.answers)
+        })
         return my_dict
+
+    def get_gravatar_thumbnail(self, size=150):
+        email = self.email.encode('utf-8')
+        gravatar_url = "//www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest()
+        gravatar_url = '%s?d=%s&s=%s' % (gravatar_url, 'retro', str(size))
+        return gravatar_url

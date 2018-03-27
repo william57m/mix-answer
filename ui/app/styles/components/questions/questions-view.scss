@@ -36,6 +36,8 @@
             padding: 17px 0px;
             .description-title {
                 color: #07C;
+                font-size: 16px;
+                font-weight: 500;
                 cursor: pointer;
                 word-wrap: break-word;
                 &:hover {
@@ -67,6 +69,7 @@
         }
     }
 }
+
 .description-footer {
     float: right;
     color: #9199a1;
@@ -76,6 +79,34 @@
         cursor: pointer;
         &:hover {
             opacity: 0.8;
+        }
+    }
+}
+
+.question-type, .answer-type {
+    .description-footer {
+        float: right;
+        color: #606060;
+        font-size: 11px;
+        background: #E0EAF1;
+        padding: 10px;
+        .description-img {
+            float: left;
+        }
+        .description-content {
+            float: left;
+            padding-left: 10px;
+        }
+        .description-user {
+            color: #07C;
+            cursor: pointer;
+            font-size: 12px;
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+        img {
+            width: 32px;
         }
     }
 }

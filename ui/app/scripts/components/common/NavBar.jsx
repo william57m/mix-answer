@@ -49,7 +49,7 @@ class UserDropdown extends React.Component {
         return (
             <li className="user-dropdown-li" onClick={this.toggleDropdown} ref="list">
                 <span>
-                    <img className="user-img" src="resources/images/default_avatar.png" />
+                    <img className="user-img" src={this.props.user.gravatar_url} />
                     <i className="fa fa-chevron-down" />
                 </span>
                 <ul style={{ display: this.state.showDropdown ? 'block': 'none' }} className="dropdown-menu user-dropdown-menu">

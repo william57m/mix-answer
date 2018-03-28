@@ -51,8 +51,8 @@ class SearchView extends React.Component {
         return (
             <div className="search-page">
                 {this.state.questions.length ?
-                    <h4>Results for "{this.state.value}"</h4> :
-                    <h4>No result for "{this.state.value}"</h4>
+                    <h4 className="question-title">Results for "{this.state.value}"</h4> :
+                    <h4 className="question-title">No result for "{this.state.value}"</h4>
                 }
                 {this.state.questions.length ?
                     <div className="questions-container">

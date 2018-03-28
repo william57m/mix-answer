@@ -10,9 +10,9 @@ class QuestionStore {
     @observable isLoaded = false;
     @observable isCurrentLoaded = false;
 
-    loadAll() {
+    loadAll(limit, offset, unanswered) {
         this.isLoaded = false;
-        var promise = this._loadAll();
+        var promise = this._loadAll(limit, offset, unanswered);
         promise.then(result => {
             this.questions = result.data;
             this.isLoaded = true;
@@ -86,8 +86,13 @@ class QuestionStore {
     }
 
     // Ajax requests
-    _loadAll() {
-        return $.get(URL.questions);
+    _loadAll(limit, offset, unanswered) {
+        var qp = $.param({
+            limit: limit || 1000,
+            offset: offset || 0,
+            unanswered: unanswered || false
+        });
+        return $.get(URL.questions + '?' + qp);
     }
     _load(id) {
         return $.get(URL.question.replace(':questionId', id));

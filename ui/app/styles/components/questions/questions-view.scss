@@ -2,10 +2,6 @@
     height: 100%;
     overflow-x: hidden;
 
-    .question-list {
-        border-top: 1px solid lightgrey;
-    }
-
     .questions-row {
         border-bottom: 1px solid lightgrey;
         height: 100%;
@@ -112,5 +108,41 @@
 }
 
 .empty-view {
+    padding: 50px;
     text-align: center;
+}
+
+
+.questions-header {
+    height: 42px;
+    border-bottom: 1px solid lightgrey;
+    .title {
+        width: 50%;
+        float: left;
+    }
+    .filter {
+        width: 50%;
+        float: right;
+    }
+    .tabs {
+        list-style: none;
+        margin: 0;
+        li {
+            cursor: pointer;
+            float: right;
+            border: 1px solid lightgrey;
+            border-color: white;
+            padding: 10px;
+            position: relative;
+            display: block;
+            &.active {
+                cursor: default;
+                border-top: 2px solid $primary-color;
+                border-color: lightgrey;
+                border-top-color: $primary-color;
+                border-bottom-color: white;
+                margin-bottom: -1px;
+            }
+        }
+    }
 }

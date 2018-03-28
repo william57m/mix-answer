@@ -211,9 +211,9 @@ class Question extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <div className="question-title">
+                <h4 className="question-title">
                     {this.props.question.title}
-                </div>
+                </h4>
                 <Answer type="question" question={this.props.question} />
             </React.Fragment>
         );

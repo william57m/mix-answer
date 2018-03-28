@@ -46,6 +46,7 @@
     "moment": "^2.21.0",
     "node-sass": "^4.7.2",
     "react-bootstrap": "^0.32.1",
+    "react-paginate": "^5.2.2",
     "react-quill": "^1.2.6",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",

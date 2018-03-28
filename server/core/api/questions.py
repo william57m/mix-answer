@@ -1,8 +1,10 @@
 import json
 
+from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 
 from core.api import BaseRequestHandler
+from core.db.models import Answer
 from core.db.models import Question
 from core.db.models import Tag
 from core.services.authentication import AuthenticationService
@@ -14,13 +16,17 @@ from core.utils.query import limit_offset_query
 from core.utils.query import order_query
 from core.utils.query import update_by_property_list
 
-
+import logging
+log = logging.getLogger(__name__)
 class QuestionHandler(BaseRequestHandler):
 
     async def get(self):
 
         # Prepare query
         query = self.application.db.query(Question)
+        if self.get_argument('unanswered', False) == 'true':
+            questions_with_answer_id = self.application.db.query(func.distinct(Answer.question_id))
+            query = query.filter(Question.id.notin_(questions_with_answer_id))
         metadata = extract_metadata(query)
         query = order_query(self, query)
         query = limit_offset_query(self, query, metadata)

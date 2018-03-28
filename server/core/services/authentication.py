@@ -1,4 +1,5 @@
 import functools
+import hashlib
 import logging
 
 from sqlalchemy.exc import SQLAlchemyError
@@ -65,10 +66,11 @@ class AuthenticationService:
 
         return None
 
-    def regular_auth(self, email, password):
+    async def regular_auth(self, email, password):
         # Find user
+        encoded_password = hashlib.md5(password.encode('utf-8')).hexdigest()
         user = self.application.db.query(User).filter(User.email == email) \
-                                              .filter(User.password == password) \
+                                              .filter(User.password == encoded_password) \
                                               .first()
         # Regenerate session
         if user:

@@ -22,17 +22,19 @@ class SessionStore {
 
     login(email, password) {
         this.isLoaded = false;
-        return $.ajax({
+        var promise = $.ajax({
             method: 'POST',
             url: URL.login,
             dataType: 'json',
             data: JSON.stringify({email: email, password: password})
-        }).then(result => {
+        });
+        promise.then(result => {
             this.user = result;
             this.isLoaded = true;
         }, () => {
             this.isLoaded = true;
         });
+        return promise;
     }
 
     logout() {

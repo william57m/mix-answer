@@ -45,8 +45,13 @@ $heightNavbar: 60px;
             padding-left: 10px;
             box-shadow: none !important;
             outline: none !important;
-            background: #373d46;
+            background: lighten(#24292e, 15%);
             color: white;
+            font-weight: 600;
+            &::placeholder {
+                color: #D0D0D0;
+                font-weight: 500;
+            }
         }
     }
 

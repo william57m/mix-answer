@@ -10,8 +10,6 @@ services:
         network_mode: bridge
         volumes:
             - ./server:/home/server
-        ports:
-            - "5000:5000"
         links:
             - mix-answer-postgres:db
             - mix-answer-redis:redis

@@ -35,6 +35,11 @@ docker-compose run --rm --no-deps mix-answer-server python scripts/init_db.py --
 http://localhost:8080
 ```
 
+## DB Class Diagram
+```
+https://www.lucidchart.com/documents/embeddedchart/963a601e-0870-45c2-871f-acdb405c5090
+```
+
 ## Tests
 ```
 # Build and tag the test image

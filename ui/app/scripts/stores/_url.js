@@ -19,5 +19,6 @@ export default URL = {
     authenticated: 'api/authenticated',
     init: 'api/init',
     login: 'api/login',
-    logout: 'api/logout'
+    logout: 'api/logout',
+    signup: 'api/users'
 };

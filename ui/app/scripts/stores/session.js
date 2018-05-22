@@ -5,11 +5,15 @@ import URL from './_url';
 
 
 class SessionStore {
+    @observable features = {};
     @observable user = null;
     @observable isLoaded = false;
 
     init() {
         return $.get(URL.init).then(result => {
+            if (result.features) {
+                this.features = result.features;
+            }
             if (result.user) {
                 this.user = result.user;
             }
@@ -43,6 +47,15 @@ class SessionStore {
             url: URL.logout
         }).then(() => {
             this.user = null;
+        });
+    }
+
+    signup(firstname, lastname, email, password) {
+        return $.ajax({
+            method: 'POST',
+            url: URL.signup,
+            dataType: 'json',
+            data: JSON.stringify({firstname: firstname, lastname: lastname, email: email, password: password})
         });
     }
 }

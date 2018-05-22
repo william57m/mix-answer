@@ -12,6 +12,7 @@ import QuestionsViews from './components/questions/QuestionsView';
 import ProfileView from './components/profile/ProfileView';
 import LoginView from './components/LoginView';
 import SearchView from './components/search/SearchView';
+import SignupView from './components/SignupView';
 
 // Store
 import SessionStore from './stores/session';
@@ -61,6 +62,7 @@ class MainComponent extends React.Component {
                 <App>
                     <Switch>
                         <ParentRoute path="/login" component={LoginView} />
+                        <ParentRoute path="/signup" component={SignupView} />
                         <Route path="/questions" component={QuestionsViews} />
                         <ParentRoute private path="/question/ask" component={AskQuestionView} />
                         <ParentRoute private path="/profile" component={ProfileView} />

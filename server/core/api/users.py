@@ -19,11 +19,11 @@ class UserHandler(BaseRequestHandler):
         data = json.loads(self.request.body.decode('utf-8'))
         firstname = check_param(data, name='firstname', type_param='string', required=True)
         lastname = check_param(data, name='lastname', type_param='string', required=True)
-        email = check_param(data, name='email', type_param='string', required=True)
+        email = check_param(data, name='email', type_param='email', required=True)
         password = check_param(data, name='password', type_param='string', required=True)
         hashed_password = hashlib.md5(password.encode('utf-8')).hexdigest()
 
-        user = User(firstname=firstname, lastname=lastname, email=email, password=hashed_password)
+        user = User(firstname=firstname, lastname=lastname, email=email.lower(), password=hashed_password)
         self.application.db.add(user)
 
         # Commit in DB

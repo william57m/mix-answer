@@ -25,6 +25,7 @@ class LoginPage extends React.Component {
         this.login = this.login.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.goToSignup = this.goToSignup.bind(this);
     }
 
     // Actions
@@ -44,6 +45,9 @@ class LoginPage extends React.Component {
                 formErrorMessage: 'Wrong email/password. Try again.'
             });
         });
+    }
+    goToSignup() {
+        RouteService.goTo('/signup');
     }
 
     // On change handlers
@@ -100,6 +104,11 @@ class LoginPage extends React.Component {
                     }
                     <div className="login-actions">
                         <button className="btn btn-default" onClick={this.login} disabled={this.state.isDisabledButton || this.state.isLoggingIn}>Log In</button>
+                        {SessionStore.features.ldap_enabled ? null :
+                            <span className="btn-action-signup" onClick={this.goToSignup}>
+                                <a>Sign up</a>
+                            </span>
+                        }
                     </div>
                 </div>
             </div>

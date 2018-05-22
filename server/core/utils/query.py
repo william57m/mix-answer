@@ -1,3 +1,4 @@
+import re
 import sqlalchemy
 
 from sqlalchemy import and_
@@ -164,6 +165,9 @@ def check_param(data, name, type_param, required):
     elif type_param == 'list':
         if type(param) is not list:
             raise BadRequestError(f'Param {name} must be an array')
+    elif type_param == 'email':
+        if not re.match(r'[^@]+@[^@]+\.[^@]+', param):
+            raise BadRequestError(f'{param} is not a valid email')
 
     return param
 
